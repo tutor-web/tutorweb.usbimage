@@ -1,0 +1,26 @@
+#!/bin/sh -e
+MOUNTPOINT=./tmpmnt
+CMD="$1" ; shift
+USBDEV="$1" ; shift
+
+do_chroot() {
+    [ -d "$MOUNTPOINT" ] || mkdir -- "$MOUNTPOINT"
+    echo Mounting ${USBDEV}1 at $MOUNTPOINT ...
+    mount "${USBDEV}1" "$MOUNTPOINT"
+    mount --bind /dev "$MOUNTPOINT/dev"
+    mount --bind /sys "$MOUNTPOINT/sys"
+    mount --bind /proc "$MOUNTPOINT/proc"
+    chroot "$MOUNTPOINT" "$*"
+    sleep 1
+    umount "$MOUNTPOINT/proc"
+    umount "$MOUNTPOINT/sys"
+    umount "$MOUNTPOINT/dev"
+    umount "$MOUNTPOINT"
+    rmdir -- "$MOUNTPOINT"
+}
+
+do_grub_install() {
+    do-chroot /usr/sbin/grub-install "${USBDEV}"
+}
+
+do_$CMD "$@"

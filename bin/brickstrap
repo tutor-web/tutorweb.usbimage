@@ -1,0 +1,9 @@
+#!/bin/sh
+exec ./brickstrap/brickstrap.sh \
+    -p tutorweb-box \
+    -d output \
+    -c base \
+    -c tutorweb \
+    -c smileycoin \
+    -c usb_x86-64 \
+    "$*"
