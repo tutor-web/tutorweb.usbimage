@@ -1,0 +1,7 @@
+net-tools
+ifupdown
+bridge-utils
+dnsmasq
+hostapd
+iw
+ssh

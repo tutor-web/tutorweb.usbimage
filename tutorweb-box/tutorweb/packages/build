@@ -1,0 +1,6 @@
+python
+python-dev
+git
+build-essential
+libxml2-dev
+libxslt1-dev

@@ -1,0 +1,6 @@
+interface=br0
+dhcp-range=172.16.1.0,172.16.1.255,1h
+
+expand-hosts
+domain-needed
+bogus-priv

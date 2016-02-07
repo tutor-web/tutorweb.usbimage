@@ -1,0 +1,6 @@
+apt
+sudo
+locales
+dialog
+rsyslog
+nullmailer
