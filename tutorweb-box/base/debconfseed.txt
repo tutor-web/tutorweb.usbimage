@@ -1,5 +1,6 @@
 locales	locales/locales_to_be_generated	multiselect	en_GB.UTF-8 UTF-8
 locales	locales/default_environment_locale	select	en_GB.UTF-8
+
 tzdata	tzdata/Zones/Australia	select
 tzdata	tzdata/Zones/US		select
 tzdata	tzdata/Zones/Asia	select
@@ -14,3 +15,8 @@ tzdata	tzdata/Zones/America	select
 tzdata	tzdata/Areas		select
 tzdata	tzdata/Zones/Atlantic	select
 tzdata	tzdata/Zones/Indian	select
+
+nullmailer nullmailer/defaultdomain	box.tutor-web.net
+nullmailer nullmailer/relayhost		localhost smtp --port=9587
+nullmailer shared/mailname		box.tutor-web.net
+nullmailer nullmailer/adminaddr		lentinj@shuttlethread.net
