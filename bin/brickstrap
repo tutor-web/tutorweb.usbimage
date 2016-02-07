@@ -6,4 +6,4 @@ exec ./brickstrap/brickstrap.sh \
     -c tutorweb \
     -c smileycoin \
     -c usb_x86-64 \
-    "$*"
+    "$@"
