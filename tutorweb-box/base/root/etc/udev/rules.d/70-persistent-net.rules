@@ -1,0 +1,16 @@
+# Bridge and loopback get left alone
+SUBSYSTEM=="net", KERNEL=="br*", GOTO="persistent_net_end"
+SUBSYSTEM=="net", KERNEL=="lo", GOTO="persistent_net_end"
+
+# Internal network port
+SUBSYSTEM=="net", DRIVERS=="e1000e", NAME="int0", GOTO="persistent_net_end"
+
+# Internal wifi card
+SUBSYSTEM=="net", DRIVERS=="iwlwifi", NAME="wlan0", GOTO="persistent_net_end"
+
+# USB devices are consided external access
+SUBSYSTEM=="net", ACTION=="add", DRIVERS=="usb", NAME="wwan%n", GOTO="persistent_net_end"
+
+# Anything else is unknown
+SUBSYSTEM=="net", ACTION=="add", NAME="other%n", GOTO="persistent_net_end"
+LABEL="persistent_net_end"

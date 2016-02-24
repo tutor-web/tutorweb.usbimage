@@ -1,3 +1,0 @@
-auto wlan0
-iface wlan0 inet manual
-    hostapd /etc/hostapd/hostapd.conf

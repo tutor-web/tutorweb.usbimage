@@ -1,0 +1,5 @@
+SUBSYSTEMS=="scsi", \
+    ATTRS{model}=="Mass Storage    ", \
+    ATTRS{vendor}=="HUAWEI  ", \
+    RUN += "/usr/sbin/usb_modeswitch -v12d1 -p1f01 -M55534243123456780000000000000a11062000000000000100000000000000"
+            

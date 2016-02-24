@@ -5,3 +5,6 @@ dnsmasq
 hostapd
 iw
 ssh
+usb-modeswitch
+iptables
+iputils-ping

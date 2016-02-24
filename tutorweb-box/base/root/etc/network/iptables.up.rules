@@ -1,0 +1,67 @@
+*filter
+
+:ssh - [0:0]
+-A ssh -m recent --name SSH --set
+-A ssh -m recent --name SSH --update --seconds 60 --hitcount 10 -m limit -j REJECT --reject-with icmp-admin-prohibited
+-A ssh -m recent --name SSH --update --seconds 60 --hitcount 10 -j DROP
+-A ssh -j ACCEPT 
+
+:INPUT DROP [0:0]
+-A INPUT -p ipv6 -j ACCEPT 
+-A INPUT -i lo -j ACCEPT 
+-A INPUT -s 127.0.0.0/8 ! -i lo -j LOG 
+-A INPUT -s 127.0.0.0/8 ! -i lo -j DROP 
+-A INPUT -i br0 -j ACCEPT 
+-A INPUT -s 172.16.0.0/12 ! -i br0 -j LOG 
+-A INPUT -s 172.16.0.0/12 ! -i br0 -j DROP 
+-A INPUT -d 255.255.255.255/32 -j ACCEPT
+-A INPUT -d 224.0.0.0/4 -j ACCEPT
+
+-A INPUT -p icmp -j ACCEPT 
+-A INPUT -p tcp -m tcp ! --syn -j ACCEPT 
+-A INPUT -p tcp -m tcp --dport ssh -j ssh
+-A INPUT -p tcp -m tcp --dport 6666 -j ACCEPT 
+-A INPUT -p tcp -m tcp --dport auth -j REJECT --reject-with tcp-reset 
+-A INPUT -p tcp -m tcp --dport ftp -j DROP
+-A INPUT -p tcp -m tcp --dport smtp -j DROP
+-A INPUT -p tcp -m tcp --dport telnet -j DROP
+-A INPUT -p tcp -m tcp --dport 135:139 -j DROP
+-A INPUT -p tcp -m tcp --dport 445 -j DROP
+-A INPUT -p udp -m udp --dport 1024:65535 -j ACCEPT 
+-A INPUT -j LOG 
+-A INPUT -j DROP 
+
+:FORWARD DROP [0:0]
+-A INPUT -i lo -j ACCEPT 
+-A FORWARD -i br0 -j ACCEPT
+-A FORWARD -m state --state RELATED,ESTABLISHED -j ACCEPT 
+-A FORWARD -p tcp -m tcp --dport ssh -j ACCEPT 
+-A FORWARD -j LOG 
+-A FORWARD -j DROP 
+
+:OUTPUT ACCEPT [0:0]
+
+COMMIT
+
+*mangle
+:PREROUTING ACCEPT [0:0]
+:INPUT ACCEPT [0:0]
+:FORWARD ACCEPT [0:0]
+:OUTPUT ACCEPT [0:0]
+:POSTROUTING ACCEPT [0:0]
+
+COMMIT
+
+*nat
+:PREROUTING ACCEPT [0:0]
+#-A PREROUTING -p tcp --dport 2201 -j DNAT --to 192.168.192.10:22
+# -A PREROUTING -p tcp -m multiport --dports 20000:21000 -j DNAT --to 10.150.1.2
+
+:OUTPUT ACCEPT [0:0]
+
+:POSTROUTING ACCEPT [0:0]
+-A POSTROUTING -o lo -j ACCEPT
+-A POSTROUTING -o br0 -j ACCEPT
+-A POSTROUTING -s 172.16.0.0/12 -j MASQUERADE
+
+COMMIT

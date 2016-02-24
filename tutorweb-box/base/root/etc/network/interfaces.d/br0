@@ -1,6 +1,0 @@
-auto br0
-iface br0 inet static
-    address 172.16.0.1
-    netmask 255.240.0.0
-    bridge_ports none
-    bridge_maxwait 5
