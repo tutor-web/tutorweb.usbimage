@@ -1,0 +1,12 @@
+[Unit]
+Description=SMLYcoin
+After=network.target
+
+[Service]
+ExecStart=/srv/tutorweb.smileycoin/src/smileycoind --server
+User=smly
+Group=nogroup
+
+[Install]
+WantedBy=multi-user.target
+Alias=smly.service
