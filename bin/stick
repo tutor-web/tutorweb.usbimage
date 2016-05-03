@@ -41,6 +41,21 @@ do_grub_install() {
     do_chroot /usr/sbin/grub-install "${USBDEV}"
 }
 
+do_copy_user() {
+    NEWUSER="$1"
+    [ -d "/home/${NEWUSER}" ] || { echo "No user directory /home/${NEWUSER}"; exit 1; }
+
+    mount_part
+    mkdir -p "$MOUNTPOINT/home/${NEWUSER}/.ssh"
+    echo "/home/${NEWUSER}/.ssh/authorized_keys" > "$MOUNTPOINT/home/${NEWUSER}/.ssh/authorized_keys"
+    chown -R ${NEWUSER}:${NEWUSER} "$MOUNTPOINT/home/${NEWUSER}"
+
+    for f in passwd shadow group; do
+        grep -E "^${NEWUSER}:" /etc/$f >> "$MOUNTPOINT/etc/$f"
+    done
+    do_chroot /usr/sbin/usermod -aG sudo ${NEWUSER}
+}
+
 [ -b "${USBDEV}" ] || { echo "Block device ${USBDEV} does not exist"; exit 1; }
 [ -d "$MOUNTPOINT" ] || mkdir -- "$MOUNTPOINT"
 USBPART="${USBDEV}-part1"
