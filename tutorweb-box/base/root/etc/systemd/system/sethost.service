@@ -1,0 +1,12 @@
+[Unit]
+Description=Setup host
+DefaultDependencies=no
+After=sysinit.target local-fs.target
+Before=base.target
+
+[Service]
+Type=oneshot
+ExecStart=/etc/sethost/sethost
+
+[Install]
+WantedBy=base.target
