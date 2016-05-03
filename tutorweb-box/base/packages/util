@@ -4,3 +4,6 @@ ne
 less
 screen
 usbutils
+curl
+wget
+ssl-cert

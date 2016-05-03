@@ -5,3 +5,5 @@ dialog
 rsyslog
 nullmailer
 apt-utils
+cron
+logrotate
