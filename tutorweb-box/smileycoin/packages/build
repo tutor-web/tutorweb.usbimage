@@ -6,3 +6,4 @@ libboost-system-dev
 libboost-filesystem-dev
 libboost-program-options-dev
 libboost-thread-dev
+libssl-dev
