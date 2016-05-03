@@ -13,3 +13,6 @@ ff02::2		ip6-allrouters
 
 172.16.0.1	twbox-$HOSTID
 EOF
+
+umount /var/host/current 2>/dev/null || true
+mount --bind /var/host/twbox-${HOSTID} /var/host/current
