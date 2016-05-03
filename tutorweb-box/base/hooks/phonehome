@@ -1,33 +1,3 @@
 mkdir $(br_rootfs_dir)/etc/phonehome
 ssh-keygen -N "" -f $(br_rootfs_dir)/etc/phonehome/id_rsa
-br_chroot chown nobody:nobody /etc/phonehome/id_rsa*
-echo <<EOF > $(br_rootfs_dir)/etc/phonehome/known_hosts
-|1|fyDx9+2kk4W3bDVbXSnhUo8pQ3k=|SUU625Nm1SjZZXhIuB4BNk5vIsA= ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBMaVIAuzuZM4iopQ6yjQLhyIf9kYDPBMtUAzQv+CHQxcYKC8ZZuoKoVb/8Z2FuSLdNoWuTi0jmkozAzBgRHpXhw=
-|1|qL/GdmwB3i8nIMJiVgdhovQD7EI=|9E2PFIHNh6klm7NKZh41/l1QkwM= ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBMaVIAuzuZM4iopQ6yjQLhyIf9kYDPBMtUAzQv+CHQxcYKC8ZZuoKoVb/8Z2FuSLdNoWuTi0jmkozAzBgRHpXhw=
-EOF
-
-echo <<EOF > $(br_rootfs_dir)/etc/phonehome/known_hosts
-[Unit]
-Description=Phone Home Reverse SSH Service
-ConditionPathExists=|/usr/bin
-After=network.target
-
-[Service]
-User=nobody
-ExecStart=/usr/bin/ssh -NTC \
-    -o ServerAliveInterval=60 \
-    -o ExitOnForwardFailure=yes \
-    -o UserKnownHostsFile=/etc/phonehome/known_hosts \
-    -i /etc/phonehome/id_rsa \
-    -L 9525:localhost:25 \
-    -R 9522:localhost:22 \
-    -R 9580:localhost:80 \
-    phonehome@tutor-web.net
-
-# Restart every >2 seconds to avoid StartLimitInterval failure
-RestartSec=3
-Restart=always
-
-[Install]
-WantedBy=multi-user.target
-EOF
+br_chroot chown nobody:nogroup /etc/phonehome/id_rsa*
