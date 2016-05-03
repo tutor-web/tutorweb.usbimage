@@ -1,26 +1,48 @@
-#!/bin/sh -e
+#!/bin/sh
 MOUNTPOINT=./tmpmnt
-CMD="$1" ; shift
 USBDEV="$1" ; shift
+CMD="$1" ; shift
+
+mount_part() {
+    [ -b "${USBPART}" ] || { echo "${USBPART} does not exist"; exit 1; }
+    echo Mounting ${USBPART} at $MOUNTPOINT ...
+    mountpoint -q "$MOUNTPOINT" || mount "${USBPART}" "$MOUNTPOINT" || exit 1
+}
+
+do_rootfs() {
+    # TODO: (echo o; echo n; echo p; echo 1; echo ; echo; echo w) | sudo fdisk ${USBDEV}
+    mkfs.ext4 "${USBPART}"
+
+    mount_part
+    tar -C "$MOUNTPOINT" -xvf output/rootfs.tar
+}
 
 do_chroot() {
-    [ -d "$MOUNTPOINT" ] || mkdir -- "$MOUNTPOINT"
-    echo Mounting ${USBDEV}1 at $MOUNTPOINT ...
-    mount "${USBDEV}1" "$MOUNTPOINT"
-    mount --bind /dev "$MOUNTPOINT/dev"
-    mount --bind /sys "$MOUNTPOINT/sys"
-    mount --bind /proc "$MOUNTPOINT/proc"
-    chroot "$MOUNTPOINT" "$*"
+    mount_part
+    mount --bind /dev "$MOUNTPOINT/dev" || exit 1
+    mount --bind /dev/pts "$MOUNTPOINT/dev/pts" || exit 1
+    mount --bind /sys "$MOUNTPOINT/sys" || exit 1
+    mount --bind /proc "$MOUNTPOINT/proc" || exit 1
+    chroot "$MOUNTPOINT" $* || true
     sleep 1
     umount "$MOUNTPOINT/proc"
     umount "$MOUNTPOINT/sys"
+    umount "$MOUNTPOINT/dev/pts"
     umount "$MOUNTPOINT/dev"
-    umount "$MOUNTPOINT"
-    rmdir -- "$MOUNTPOINT"
 }
 
 do_grub_install() {
-    do-chroot /usr/sbin/grub-install "${USBDEV}"
+    do_chroot /usr/sbin/update-grub
+    do_chroot /usr/sbin/grub-install "${USBDEV}"
 }
 
+[ -b "${USBDEV}" ] || { echo "Block device ${USBDEV} does not exist"; exit 1; }
+[ -d "$MOUNTPOINT" ] || mkdir -- "$MOUNTPOINT"
+USBPART="${USBDEV}-part1"
+
 do_$CMD "$@"
+
+echo "Unmounting $MOUNTPOINT"
+mountpoint -q "$MOUNTPOINT" && umount "$MOUNTPOINT"
+rmdir -- "$MOUNTPOINT"
+sync
