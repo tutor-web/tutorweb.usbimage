@@ -31,6 +31,11 @@ do_chroot() {
     umount "$MOUNTPOINT/dev"
 }
 
+do_extra_install() {
+    do_chroot /usr/bin/apt-get update
+    do_chroot /usr/bin/apt-get install nginx mysql-server
+}
+
 do_grub_install() {
     do_chroot /usr/sbin/update-grub
     do_chroot /usr/sbin/grub-install "${USBDEV}"
