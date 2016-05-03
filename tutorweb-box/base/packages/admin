@@ -4,3 +4,4 @@ locales
 dialog
 rsyslog
 nullmailer
+apt-utils
