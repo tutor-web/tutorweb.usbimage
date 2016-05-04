@@ -14,7 +14,7 @@ mount --bind /var/host/twbox-${HOSTID} /var/host/current
 }
 
 [ -f /var/host/current/mailname ] || {
-    echo "${HOSTID}.tutor-web.net" > /var/host/current/mailname
+    echo "twbox-${HOSTID}.tutor-web.net" > /var/host/current/mailname
 }
 [ -L /etc/mailname ] || {
     [ -e /etc/mailname ] && mv /etc/mailname /etc/hosts.o
