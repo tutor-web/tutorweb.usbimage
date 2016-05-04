@@ -28,3 +28,17 @@ ln -sf /etc/nginx/sites-available/tw-proxy /etc/nginx/sites-enabled/tw-proxy
 ln -sf /var/host/current/nginx/redirect /etc/nginx/sites-enabled/redirect
 
 [ -L /srv/tutorweb.buildout/buildout.cfg ] || ln -s /var/host/current/buildout.cfg /srv/tutorweb.buildout/buildout.cfg
+
+[ -d /var/host/current/phonehome ] || mkdir -p /var/host/current/phonehome
+[ -f /var/host/current/phonehome/id_rsa ] || {
+    ssh-keygen -N "" -f /var/host/current/phonehome/id_rsa
+    chown nobody:nogroup /var/host/current/phonehome/id_rsa*
+}
+[ -f /var/host/current/phonehome/config ] || {
+    cat <<EOF > /var/host/current/phonehome/config
+Host *
+    LocalForward 9625 localhost:25
+    RemoteForward 9622 localhost:22
+    RemoteForward 9680 localhost:80
+EOF
+}
