@@ -1,0 +1,27 @@
+upstream plone {
+  # TODO: nginx doesn't support this yet(need 1.7.2) hash $remote_addr$cookie___ac consistent;
+  ip_hash;
+
+  server 127.0.0.1:8181;  # Can be marked as "down"
+  server 127.0.0.1:8182;
+  server 127.0.0.1:8183;
+  server 127.0.0.1:8184;
+}
+
+server {
+  listen [::]:80 default_server;
+  listen      80 default_server;
+
+  location ~ ^/manage {
+    deny all;
+  }
+
+  # Lets-encrypt
+  location /.well-known/acme-challenge {
+    root /tmp/acme-challenge;
+  }
+
+  location / {
+    proxy_pass http://plone/VirtualHostBase/$scheme/$host:$server_port/tutor-web/VirtualHostRoot$request_uri;
+  }
+}
