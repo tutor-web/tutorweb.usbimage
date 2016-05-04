@@ -42,3 +42,8 @@ Host *
     RemoteForward 9680 localhost:80
 EOF
 }
+
+[ -d /var/host/current/smly ] || {
+  mkdir -p /var/host/current/smly
+  chown smly:staff /var/host/current/smly
+}
