@@ -9,3 +9,4 @@ usb-modeswitch
 iptables
 iputils-ping
 isc-dhcp-client
+rsync
