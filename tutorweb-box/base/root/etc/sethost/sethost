@@ -37,7 +37,7 @@ ln -sf /var/host/current/nginx/redirect /etc/nginx/sites-enabled/redirect
 [ -f /var/host/current/phonehome/config ] || {
     cat <<EOF > /var/host/current/phonehome/config
 Host *
-    LocalForward 9625 localhost:25
+    LocalForward 9025 localhost:25
     RemoteForward 9622 localhost:22
     RemoteForward 9680 localhost:80
 EOF
