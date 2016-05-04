@@ -47,7 +47,7 @@ do_copy_user() {
 
     mount_part
     mkdir -p "$MOUNTPOINT/home/${NEWUSER}/.ssh"
-    echo "/home/${NEWUSER}/.ssh/authorized_keys" > "$MOUNTPOINT/home/${NEWUSER}/.ssh/authorized_keys"
+    cat "/home/${NEWUSER}/.ssh/authorized_keys" > "$MOUNTPOINT/home/${NEWUSER}/.ssh/authorized_keys"
     chown -R ${NEWUSER}:${NEWUSER} "$MOUNTPOINT/home/${NEWUSER}"
 
     for f in passwd shadow group; do
