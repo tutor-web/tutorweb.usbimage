@@ -5,9 +5,24 @@ HOSTID="$(/bin/sed 's/://g ; s/^.\{6\}//' /sys/class/net/int0/address)"
 /bin/hostname twbox-$HOSTID
 /bin/hostname > /etc/hostname
 
+[ -d /var/host/twbox-${HOSTID} ] || {
+    mkdir -- "/var/host/twbox-${HOSTID}"
+}
+
 umount /var/host/current 2>/dev/null || true
 mount --bind /var/host/twbox-${HOSTID} /var/host/current
 
+[ -f /var/host/current/hosts ] || {
+    cat <<EOF > /var/host/current/hosts
+127.0.0.1       localhost
+127.0.0.22      smtp-relay
+::1             localhost ip6-localhost ip6-loopback
+ff02::1         ip6-allnodes
+ff02::2         ip6-allrouters
+
+172.16.0.1      twbox twbox-7a6741 box.tutor-web.net LOCATIONHERE.tutor-web.net
+EOF
+}
 [ -L /etc/hosts ] || {
     [ -e /etc/hosts ] && mv /etc/hosts /etc/hosts.o
     ln -s /var/host/current/hosts /etc/hosts
@@ -46,12 +61,17 @@ ln -sf /var/host/current/nginx/redirect /etc/nginx/sites-enabled/redirect
     cat <<EOF > /var/host/current/phonehome/config
 Host *
     LocalForward 9025 localhost:25
-    RemoteForward 9622 localhost:22
-    RemoteForward 9680 localhost:80
+    RemoteForward 9X22 localhost:22
+    RemoteForward 9X80 localhost:80
 EOF
 }
 
 [ -d /var/host/current/smly ] || {
   mkdir -p /var/host/current/smly
   chown smly:staff /var/host/current/smly
+}
+[ -f /var/host/current/smly/smileycoin.conf ] || {
+    RPCPASS="$(xxd -ps -l 22 /dev/urandom)"
+    echo "rpcuser=smileycoinrpc" > /var/host/current/smly/smileycoin.conf
+    echo "rpcpassword=${RPCPASS}" >> /var/host/current/smly/smileycoin.conf
 }
