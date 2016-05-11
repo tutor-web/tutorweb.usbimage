@@ -6,7 +6,7 @@ Before=basic.target
 
 [Service]
 Type=oneshot
-ExecStart=/etc/sethost/sethost
+ExecStart=/usr/local/sbin/sethost
 StandardOutput=syslog+console
 StandardError=syslog+console
 
