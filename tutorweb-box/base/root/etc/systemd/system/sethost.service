@@ -2,11 +2,13 @@
 Description=Setup host
 DefaultDependencies=no
 After=sysinit.target local-fs.target
-Before=base.target
+Before=basic.target
 
 [Service]
 Type=oneshot
 ExecStart=/etc/sethost/sethost
+StandardOutput=syslog+console
+StandardError=syslog+console
 
 [Install]
-WantedBy=base.target
+WantedBy=basic.target
