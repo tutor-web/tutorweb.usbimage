@@ -46,10 +46,48 @@ EOF
     mysql_install_db
 }
 
+[ -f /var/host/current/nginx/redirect ] || {
+    mkdir -p /var/host/current/nginx
+    cat <<EOF > /var/host/current/nginx/redirect
+server {
+  listen [::]:80;
+  listen      80;
+  server_name box.tutor-web.net;
+
+  location / {
+    rewrite           ^(.*)$ http://LOCATIONHERE.tutor-web.net$1 redirect;
+  }
+}
+EOF
+}
 [ -L /etc/nginx/sites-enabled/default ] && rm /etc/nginx/sites-enabled/default
 ln -sf /etc/nginx/sites-available/tw-proxy /etc/nginx/sites-enabled/tw-proxy
 ln -sf /var/host/current/nginx/redirect /etc/nginx/sites-enabled/redirect
 
+[ -f /var/host/current/buildout.cfg ] || {
+    cat <<'EOF' > /var/host/current/buildout.cfg
+[buildout]
+extends = cfgs/production.cfg
+always-checkout = false
+parts +=
+    replicate-dump
+    replicate-dump-mkdir
+eggs +=
+    MySQL-python
+quizdb-url = mysql+mysqldb://tw_quizdb:${passwords:mysql}@localhost/tw_quizdb?charset=utf8
+quizdb-coin-pass = ${passwords:smlyrpc}
+quizdb-coin-walletpass = ${passwords:smlywallet}
+
+[instance]
+user = admin:${passwords:admin}
+
+[passwords]
+admin = 
+mysql = 
+smlyrpc = 
+smlywallet = 
+EOF
+}
 [ -L /srv/tutorweb.buildout/buildout.cfg ] || ln -s /var/host/current/buildout.cfg /srv/tutorweb.buildout/buildout.cfg
 
 [ -d /var/host/current/phonehome ] || mkdir -p /var/host/current/phonehome
