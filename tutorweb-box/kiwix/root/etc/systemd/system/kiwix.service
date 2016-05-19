@@ -1,0 +1,12 @@
+[Unit]
+Description=Kiwix
+After=network.target
+
+[Service]
+ExecStart=/usr/local/bin/kiwix-serve --port=8280 --library /srv/kiwix/library.xml
+User=nobody
+Group=nogroup
+
+[Install]
+WantedBy=multi-user.target
+Alias=smly.service

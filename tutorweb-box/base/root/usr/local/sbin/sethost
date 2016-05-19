@@ -20,7 +20,7 @@ mount --bind /var/host/twbox-${HOSTID} /var/host/current
 ff02::1         ip6-allnodes
 ff02::2         ip6-allrouters
 
-172.16.0.1      twbox twbox-7a6741 box.tutor-web.net LOCATIONHERE.tutor-web.net
+172.16.0.1      twbox twbox-7a6741 box.tutor-web.net kiwix.tutor-web.net LOCATIONHERE.tutor-web.net
 EOF
 }
 [ -L /etc/hosts ] || {

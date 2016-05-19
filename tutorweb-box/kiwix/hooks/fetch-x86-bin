@@ -1,0 +1,8 @@
+curl -L http://download.kiwix.org/bin/kiwix-linux-x86_64.tar.bz2 | 
+    tar -C $(br_rootfs_dir)/usr/local/bin/ --strip-components=2 -jxv \
+        kiwix/bin/kiwix-manage \
+        kiwix/bin/kiwix-serve
+chmod a+x $(br_rootfs_dir)/usr/local/bin/kiwix-*
+
+# Location to hold data files
+mkdir $(br_rootfs_dir)/srv/kiwix/
