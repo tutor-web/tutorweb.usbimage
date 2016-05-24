@@ -5,6 +5,9 @@ HOSTID="$(/bin/sed 's/://g ; s/^.\{6\}//' /sys/class/net/int0/address)"
 /bin/hostname twbox-$HOSTID
 /bin/hostname > /etc/hostname
 
+LOCATION="$LOCATION"
+[ "$HOSTID" = "7ca4de" ] && LOCATION="spare"
+
 [ -d /var/host/twbox-${HOSTID} ] || {
     mkdir -- "/var/host/twbox-${HOSTID}"
 }
@@ -20,7 +23,7 @@ mount --bind /var/host/twbox-${HOSTID} /var/host/current
 ff02::1         ip6-allnodes
 ff02::2         ip6-allrouters
 
-172.16.0.1      twbox twbox-7a6741 box.tutor-web.net kiwix.tutor-web.net ka.tutor-web.net box.smileyco.in LOCATIONHERE.tutor-web.net
+172.16.0.1      twbox twbox-${HOSTID} box.tutor-web.net kiwix.tutor-web.net ka.tutor-web.net box.smileyco.in ${LOCATION}.tutor-web.net
 EOF
 }
 [ -L /etc/hosts ] || {
@@ -55,7 +58,7 @@ server {
   server_name box.tutor-web.net;
 
   location / {
-    rewrite           ^(.*)$ http://LOCATIONHERE.tutor-web.net$1 redirect;
+    rewrite           ^(.*)$ http://${LOCATION}.tutor-web.net\$1 redirect;
   }
 }
 EOF
