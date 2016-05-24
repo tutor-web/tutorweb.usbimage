@@ -6,7 +6,8 @@ HOSTID="$(/bin/sed 's/://g ; s/^.\{6\}//' /sys/class/net/int0/address)"
 /bin/hostname > /etc/hostname
 
 LOCATION="$LOCATION"
-[ "$HOSTID" = "7ca4de" ] && LOCATION="spare"
+PORTRANGE="X"
+[ "$HOSTID" = "7ca4de" ] && { LOCATION="spare"; PORTRANGE="0"; }
 
 [ -d /var/host/twbox-${HOSTID} ] || {
     mkdir -- "/var/host/twbox-${HOSTID}"
@@ -102,8 +103,8 @@ EOF
     cat <<EOF > /var/host/current/phonehome/config
 Host *
     LocalForward 9025 localhost:25
-    RemoteForward 9X22 localhost:22
-    RemoteForward 9X80 localhost:80
+    RemoteForward 9${PORTRANGE}22 localhost:22
+    RemoteForward 9${PORTRANGE}80 localhost:80
 EOF
 }
 
