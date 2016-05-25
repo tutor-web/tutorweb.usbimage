@@ -27,6 +27,7 @@
 -A INPUT -p tcp -m tcp --dport telnet -j DROP
 -A INPUT -p tcp -m tcp --dport 135:139 -j DROP
 -A INPUT -p tcp -m tcp --dport 445 -j DROP
+-A INPUT -p udp -m udp --dport ntp -j ACCEPT
 -A INPUT -p udp -m udp --dport 1024:65535 -j ACCEPT 
 -A INPUT -j LOG 
 -A INPUT -j DROP 
