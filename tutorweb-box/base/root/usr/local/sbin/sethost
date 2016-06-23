@@ -101,7 +101,9 @@ EOF
 }
 [ -f /var/host/current/phonehome/config ] || {
     cat <<EOF > /var/host/current/phonehome/config
-Host *
+Host phonehome
+    User phonehome
+    HostName tutor-web.net
     LocalForward 9025 localhost:25
     RemoteForward 9${PORTRANGE}22 localhost:22
     RemoteForward 9${PORTRANGE}80 localhost:80
