@@ -3,7 +3,7 @@ Description=SMLYcoin
 After=network.target
 
 [Service]
-ExecStart=/srv/tutorweb.smileycoin/src/smileycoind -datadir=/var/host/current/smly --server
+ExecStart=/srv/tutorweb.smileycoin/src/smileycoind -datadir=/var/host/current/smly --server -printtoconsole
 User=smly
 Group=nogroup
 

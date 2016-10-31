@@ -2,7 +2,6 @@ apt
 sudo
 locales
 dialog
-rsyslog
 nullmailer
 apt-utils
 cron
