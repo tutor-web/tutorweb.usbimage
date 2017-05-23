@@ -1,13 +1,14 @@
-upstream kiwix {
+upstream ka {
+  # TODO: This must be wrong
   server 127.0.0.1:8280;
 }
 
 server {
   listen [::]:80;
   listen      80;
-  server_name kiwix.tutor-web.net;
+  server_name ka.eias.lan;
 
   location / {
-    proxy_pass http://kiwix;
+    proxy_pass http://ka;
   }
 }

@@ -1,75 +1,57 @@
 #!/bin/sh -e
-HOSTID="$(/bin/sed 's/://g ; s/^.\{6\}//' /sys/class/net/int0/address)"
-[ -n "$HOSTID" ] || { echo "No HOSTID"; exit 1; }
+HOSTID="000000"
+[ -f /sys/class/net/int0/address ] && HOSTID="$(/bin/sed 's/://g ; s/^.\{6\}//' /sys/class/net/int0/address)"
 
+# Mount /var/local, or if it's not there then use a tmpfs
+#TODO: Actually mount the other stick
+mount -t tmpfs tmpfs /var/local
+
+mkdir -p /var/local/etc
 /bin/hostname twbox-$HOSTID
-/bin/hostname > /etc/hostname
+/bin/hostname > /var/local/etc/hostname
+echo "twbox-${HOSTID}.tutor-web.net" > /var/local/etc/mailname
 
-LOCATION="$LOCATION"
-PORTRANGE="X"
-[ "$HOSTID" = "7ca4de" ] && { LOCATION="spare"; PORTRANGE="0"; }
+##### Systemd bodges
+for dir in \
+        /var/lib/systemd \
+        /var/lib/container \
+        /var/lib/dhcp \
+        /var/cache \
+        /var/log \
+    ; do
+    mkdir -p /var/local${dir}
+done
 
-[ -d /var/host/twbox-${HOSTID} ] || {
-    mkdir -- "/var/host/twbox-${HOSTID}"
+##### DNSMasq
+mkdir -p /var/local/etc/dnsmasq.d
+
+##### MySQL
+[ -d /var/local/var/lib/mysql ] || {
+    mkdir -p /var/local/var/lib/mysql
+    [ -e /usr/bin/mysql_install_db ] && /usr/bin/mysql_install_db
 }
 
-umount /var/host/current 2>/dev/null || true
-mount --bind /var/host/twbox-${HOSTID} /var/host/current
-
-[ -f /var/host/current/hosts ] || {
-    cat <<EOF > /var/host/current/hosts
-127.0.0.1       localhost
-127.0.0.22      smtp-relay
-::1             localhost ip6-localhost ip6-loopback
-ff02::1         ip6-allnodes
-ff02::2         ip6-allrouters
-
-172.16.0.1      twbox twbox-${HOSTID} twbox-${HOSTID}.tutor-web.net box.tutor-web.net kiwix.tutor-web.net ka.tutor-web.net box.smileyco.in ${LOCATION}.tutor-web.net
-EOF
+##### Smileycoin
+[ -d /var/local/var/lib/smly ] || {
+  mkdir -p /var/local/var/lib/smly
+  chown smly:staff /var/local/var/lib/smly
 }
-[ -L /etc/hosts ] || {
-    [ -e /etc/hosts ] && mv /etc/hosts /etc/hosts.o
-    ln -s /var/host/current/hosts /etc/hosts
+[ -f /var/lib/smly/smileycoin.conf ] || {
+    RPCPASS="$(xxd -ps -l 22 /dev/urandom)"
+    echo "rpcuser=smileycoinrpc" > /var/lib/smly/smileycoin.conf
+    echo "rpcpassword=${RPCPASS}" >> /var/lib/smly/smileycoin.conf
 }
 
-[ -f /var/host/current/mailname ] || {
-    echo "twbox-${HOSTID}.tutor-web.net" > /var/host/current/mailname
-}
-[ -L /etc/mailname ] || {
-    [ -e /etc/mailname ] && mv /etc/mailname /etc/hosts.o
-    ln -s /var/host/current/mailname /etc/mailname
-}
-
-[ -L /var/lib/mysql ] || {
-    /etc/init.d/mysql stop
-    [ -e /var/lib/mysql ] && mv /var/lib/mysql /var/lib/mysql.o
-    ln -s /var/host/current/mysql /var/lib/mysql
-}
-[ -d /var/host/current/mysql ] || {
-    mkdir -p /var/host/current/mysql
-    mysql_install_db
-}
-
-[ -f /var/host/current/nginx/redirect ] || {
-    mkdir -p /var/host/current/nginx
-    cat <<EOF > /var/host/current/nginx/redirect
-server {
-  listen [::]:80;
-  listen      80;
-  server_name box.tutor-web.net;
-
-  location / {
-    rewrite           ^(.*)$ http://${LOCATION}.tutor-web.net\$1 redirect;
-  }
-}
-EOF
-}
-[ -L /etc/nginx/sites-enabled/default ] && rm /etc/nginx/sites-enabled/default
-ln -sf /etc/nginx/sites-available/tw-proxy /etc/nginx/sites-enabled/tw-proxy
-ln -sf /var/host/current/nginx/redirect /etc/nginx/sites-enabled/redirect
-
-[ -f /var/host/current/buildout.cfg ] || {
-    cat <<'EOF' > /var/host/current/buildout.cfg
+##### Tutor-web
+mkdir -p /var/local/srv/tutorweb.buildout
+mkdir -p /var/local/srv/tutorweb.buildout/var/log
+mount -t tmpfs tmpfs /srv/tutorweb.buildout/var/log
+[ -f /var/local/srv/tutorweb.buildout/buildout.cfg ] || {
+    MYSQLPASS="$(xxd -ps -l 22 /dev/urandom)"
+    TWPASS="$(xxd -ps -l 22 /dev/urandom)"
+    RPCPASS="$(awk -F= '/rpcpassword\=/ { print $2; }' /var/lib/smly/smileycoin.conf)"
+    WALLETPASS="$(xxd -ps -l 22 /dev/urandom)"
+    cat <<'EOF' > /var/local/srv/tutorweb.buildout/buildout.cfg
 [buildout]
 extends = cfgs/production.cfg
 always-checkout = false
@@ -86,21 +68,34 @@ quizdb-coin-walletpass = ${passwords:smlywallet}
 user = admin:${passwords:admin}
 
 [passwords]
-admin = 
-mysql = 
-smlyrpc = 
-smlywallet = 
+admin = ${TWPASS}
+mysql = ${MYSQLPASS}
+smlyrpc = ${RPCPASS}
+smlywallet = ${WALLETPASS}
 EOF
 }
-[ -L /srv/tutorweb.buildout/buildout.cfg ] || ln -s /var/host/current/buildout.cfg /srv/tutorweb.buildout/buildout.cfg
 
-[ -d /var/host/current/phonehome ] || mkdir -p /var/host/current/phonehome
-[ -f /var/host/current/phonehome/id_rsa ] || {
-    ssh-keygen -N "" -f /var/host/current/phonehome/id_rsa
-    chown nobody:nogroup /var/host/current/phonehome/id_rsa*
+##### Phonehome
+PORTRANGE="5"
+[ "$HOSTID" = "7a6741" ] && { PORTRANGE="6"; }
+[ "$HOSTID" = "7c7ba8" ] && { PORTRANGE="7"; }
+[ "$HOSTID" = "7ccb04" ] && { PORTRANGE="8"; }
+[ "$HOSTID" = "7cb5e1" ] && { PORTRANGE="9"; }
+[ "$HOSTID" = "7ca4de" ] && { PORTRANGE="0"; }
+
+mkdir -p /var/local/etc/phonehome
+[ -f /var/local/etc/phonehome/known_hosts ] || {
+    cat <<EOF > /var/local/etc/phonehome/known_hosts
+|1|fyDx9+2kk4W3bDVbXSnhUo8pQ3k=|SUU625Nm1SjZZXhIuB4BNk5vIsA= ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBMaVIAuzuZM4iopQ6yjQLhyIf9kYDPBMtUAzQv+CHQxcYKC8ZZuoKoVb/8Z2FuSLdNoWuTi0jmkozAzBgRHpXhw=
+|1|qL/GdmwB3i8nIMJiVgdhovQD7EI=|9E2PFIHNh6klm7NKZh41/l1QkwM= ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBMaVIAuzuZM4iopQ6yjQLhyIf9kYDPBMtUAzQv+CHQxcYKC8ZZuoKoVb/8Z2FuSLdNoWuTi0jmkozAzBgRHpXhw=
+EOF
 }
-[ -f /var/host/current/phonehome/config ] || {
-    cat <<EOF > /var/host/current/phonehome/config
+[ -f /var/local/etc/phonehome/id_rsa ] || {
+    ssh-keygen -N "" -f /var/local/etc/phonehome/id_rsa
+    chown nobody:nogroup /var/local/etc/phonehome/id_rsa*
+}
+[ -f /var/local/etc/phonehome/config ] || {
+    cat <<EOF > /var/local/etc/phonehome/config
 Host phonehome
     User phonehome
     HostName tutor-web.net
@@ -108,14 +103,4 @@ Host phonehome
     RemoteForward 9${PORTRANGE}22 localhost:22
     RemoteForward 9${PORTRANGE}80 localhost:80
 EOF
-}
-
-[ -d /var/host/current/smly ] || {
-  mkdir -p /var/host/current/smly
-  chown smly:staff /var/host/current/smly
-}
-[ -f /var/host/current/smly/smileycoin.conf ] || {
-    RPCPASS="$(xxd -ps -l 22 /dev/urandom)"
-    echo "rpcuser=smileycoinrpc" > /var/host/current/smly/smileycoin.conf
-    echo "rpcpassword=${RPCPASS}" >> /var/host/current/smly/smileycoin.conf
 }

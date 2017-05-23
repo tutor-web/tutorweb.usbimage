@@ -9,9 +9,9 @@ ExecStart=/usr/bin/ssh -NTC \
     -o ServerAliveInterval=60 \
     -o ExitOnForwardFailure=yes \
     -o UserKnownHostsFile=/etc/phonehome/known_hosts \
-    -i /var/host/current/phonehome/id_rsa \
-    -F /var/host/current/phonehome/config \
-    phonehome@tutor-web.net
+    -i /etc/phonehome/id_rsa \
+    -F /etc/phonehome/config \
+    phonehome
 
 # Restart every >2 seconds to avoid StartLimitInterval failure
 RestartSec=3

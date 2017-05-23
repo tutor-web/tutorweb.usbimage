@@ -2,4 +2,3 @@
 LABEL=twbox     /               ext4   defaults,noatime,ro,errors=remount-ro 0      1
 proc            /proc           proc   defaults                            0      0
 none            /tmp            tmpfs  nodev,nosuid                        0      0
-none /srv/tutorweb.buildout/var/log tmpfs nodev,nosuid                     0      0

@@ -1,0 +1,10 @@
+127.0.0.1       localhost
+127.0.0.22      smtp-relay
+::1             localhost ip6-localhost ip6-loopback
+ff02::1         ip6-allnodes
+ff02::2         ip6-allrouters
+
+172.16.0.1      eias.lan tutor-web.eias.lan kiwix.eias.lan ka.eias.lan coin.eias.lan box.smileyco.in
+
+# twbox-${HOSTID} twbox-${HOSTID}.tutor-web.net 
+# ${LOCATION}.tutor-web.net

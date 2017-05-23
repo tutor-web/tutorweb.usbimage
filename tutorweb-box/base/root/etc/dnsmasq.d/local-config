@@ -1,5 +1,6 @@
 interface=br0
 dhcp-range=172.16.1.0,172.16.1.255,1h
+domain=eias.lan
 
 expand-hosts
 domain-needed
@@ -7,3 +8,5 @@ bogus-priv
 
 resolv-file=/tmp/resolv.upstream.conf
 dhcp-leasefile=/run/dnsmasq.leases
+
+conf-dir=/var/local/etc/dnsmasq.d

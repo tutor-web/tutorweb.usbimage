@@ -2,3 +2,4 @@ mkdir -p $(br_rootfs_dir)/srv/tutorweb.smileycoin
 [ -d $(br_rootfs_dir)/srv/tutorweb.smileycoin/.git ] || git clone git://github.com/tutor-web/smileyCoin $(br_rootfs_dir)/srv/tutorweb.smileycoin
 br_chroot /bin/chown -R smly:staff /srv/tutorweb.smileycoin
 br_chroot_bind /usr/bin/sudo -u smly /usr/bin/make -C /srv/tutorweb.smileycoin/src -f makefile.unix USE_UPNP=-
+cp $(br_rootfs_dir)/srv/tutorweb.smileycoin/src/smileycoind $(br_rootfs_dir)/usr/local/bin/smileycoind

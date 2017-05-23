@@ -5,7 +5,7 @@ upstream kiwix {
 server {
   listen [::]:80;
   listen      80;
-  server_name kiwix.tutor-web.net;
+  server_name kiwix.eias.lan;
 
   location / {
     proxy_pass http://kiwix;

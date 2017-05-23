@@ -5,4 +5,4 @@ curl -L http://download.kiwix.org/bin/kiwix-linux-x86_64.tar.bz2 |
 chmod a+x $(br_rootfs_dir)/usr/local/bin/kiwix-*
 
 # Location to hold data files
-mkdir $(br_rootfs_dir)/srv/kiwix/
+mkdir -p $(br_rootfs_dir)/srv/kiwix/
