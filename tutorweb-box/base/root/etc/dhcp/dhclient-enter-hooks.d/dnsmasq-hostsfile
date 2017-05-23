@@ -1,13 +1,15 @@
 # Same as /sbin/dhclient-script, but into a different file
 
-# update /etc/resolv.upstream.conf based on received values
+UPSTREAM_RESOLVCONF=/tmp/resolv.upstream.conf
+
+# update ${UPSTREAM_RESOLVCONF} based on received values
 make_resolv_conf() {
     local new_resolv_conf
 
     # DHCPv4
     if [ -n "$new_domain_search" ] || [ -n "$new_domain_name" ] ||
        [ -n "$new_domain_name_servers" ]; then
-        new_resolv_conf=/etc/resolv.upstream.conf.dhclient-new
+        new_resolv_conf=${UPSTREAM_RESOLVCONF}.dhclient-new
         rm -f $new_resolv_conf
 
         if [ -n "$new_domain_name" ]; then
@@ -37,17 +39,17 @@ make_resolv_conf() {
                 echo nameserver $nameserver >>$new_resolv_conf
             done
         else # keep 'old' nameservers
-            sed -n /^\w*[Nn][Aa][Mm][Ee][Ss][Ee][Rr][Vv][Ee][Rr]/p /etc/resolv.upstream.conf >>$new_resolv_conf
+            sed -n /^\w*[Nn][Aa][Mm][Ee][Ss][Ee][Rr][Vv][Ee][Rr]/p ${UPSTREAM_RESOLVCONF} >>$new_resolv_conf
         fi
 
-	if [ -f /etc/resolv.upstream.conf ]; then
-	    chown --reference=/etc/resolv.upstream.conf $new_resolv_conf
-	    chmod --reference=/etc/resolv.upstream.conf $new_resolv_conf
+	if [ -f ${UPSTREAM_RESOLVCONF} ]; then
+	    chown --reference=${UPSTREAM_RESOLVCONF} $new_resolv_conf
+	    chmod --reference=${UPSTREAM_RESOLVCONF} $new_resolv_conf
 	fi
-        mv -f $new_resolv_conf /etc/resolv.upstream.conf
+        mv -f $new_resolv_conf ${UPSTREAM_RESOLVCONF}
     # DHCPv6
     elif [ -n "$new_dhcp6_domain_search" ] || [ -n "$new_dhcp6_name_servers" ]; then
-        new_resolv_conf=/etc/resolv.upstream.conf.dhclient-new
+        new_resolv_conf=${UPSTREAM_RESOLVCONF}.dhclient-new
         rm -f $new_resolv_conf
 
         if [ -n "$new_dhcp6_domain_search" ]; then
@@ -64,13 +66,13 @@ make_resolv_conf() {
                 echo nameserver $nameserver >>$new_resolv_conf
             done
         else # keep 'old' nameservers
-            sed -n /^\w*[Nn][Aa][Mm][Ee][Ss][Ee][Rr][Vv][Ee][Rr]/p /etc/resolv.upstream.conf >>$new_resolv_conf
+            sed -n /^\w*[Nn][Aa][Mm][Ee][Ss][Ee][Rr][Vv][Ee][Rr]/p ${UPSTREAM_RESOLVCONF} >>$new_resolv_conf
         fi
 
-	if [ -f /etc/resolv.upstream.conf ]; then
-            chown --reference=/etc/resolv.upstream.conf $new_resolv_conf
-            chmod --reference=/etc/resolv.upstream.conf $new_resolv_conf
+	if [ -f ${UPSTREAM_RESOLVCONF} ]; then
+            chown --reference=${UPSTREAM_RESOLVCONF} $new_resolv_conf
+            chmod --reference=${UPSTREAM_RESOLVCONF} $new_resolv_conf
 	fi
-        mv -f $new_resolv_conf /etc/resolv.upstream.conf
+        mv -f $new_resolv_conf ${UPSTREAM_RESOLVCONF}
     fi
 }

@@ -5,5 +5,5 @@ expand-hosts
 domain-needed
 bogus-priv
 
-resolv-file=/etc/resolv.upstream.conf
+resolv-file=/tmp/resolv.upstream.conf
 dhcp-leasefile=/run/dnsmasq.leases
