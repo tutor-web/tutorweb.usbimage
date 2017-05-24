@@ -4,9 +4,25 @@ USBDEV="$1" ; shift
 CMD="$1" ; shift
 
 mount_part() {
-    [ -b "${USBPART}" ] || { echo "${USBPART} does not exist"; exit 1; }
+    if [ -f "${USBDEV}" ] ; then
+        USBIMAGE="${USBDEV}"
+        USBDEV="$(losetup -P --find --show "${USBDEV}")"
+        USBPART="$(losetup --find --show "${USBDEV}p1")"
+    else
+        USBPART="${USBDEV}-part1"
+        [ -b "${USBPART}" ] || { echo "${USBPART} does not exist"; exit 1; }
+    fi
     echo Mounting ${USBPART} at $MOUNTPOINT ...
     mountpoint -q "$MOUNTPOINT" || mount "${USBPART}" "$MOUNTPOINT" || exit 1
+}
+
+do_rootlabel() {
+    mount_part
+    tune2fs -Ltwbox ${USBPART}
+}
+
+do_rootpwd() {
+    do_chroot passwd root
 }
 
 do_rootfs() {
@@ -19,6 +35,7 @@ do_rootfs() {
 
 do_chroot() {
     mount_part
+    TERM=xterm
     mount --bind /dev "$MOUNTPOINT/dev" || exit 1
     mount --bind /dev/pts "$MOUNTPOINT/dev/pts" || exit 1
     mount --bind /sys "$MOUNTPOINT/sys" || exit 1
@@ -37,6 +54,7 @@ do_extra_install() {
 }
 
 do_grub_install() {
+    mount_part
     do_chroot /usr/sbin/update-grub
     do_chroot /usr/sbin/grub-install "${USBDEV}"
 }
@@ -56,13 +74,12 @@ do_copy_user() {
     do_chroot /usr/sbin/usermod -aG sudo ${NEWUSER}
 }
 
-[ -b "${USBDEV}" ] || { echo "Block device ${USBDEV} does not exist"; exit 1; }
 [ -d "$MOUNTPOINT" ] || mkdir -- "$MOUNTPOINT"
-USBPART="${USBDEV}-part1"
 
 do_$CMD "$@"
 
 echo "Unmounting $MOUNTPOINT"
 mountpoint -q "$MOUNTPOINT" && umount "$MOUNTPOINT"
 rmdir -- "$MOUNTPOINT"
+[ -n "${USBIMAGE}" ] && { losetup --detach "${USBPART}"; losetup --detach "${USBDEV}"; }
 sync
