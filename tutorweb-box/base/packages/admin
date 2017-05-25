@@ -6,3 +6,5 @@ nullmailer
 apt-utils
 cron
 logrotate
+elinks
+links2
