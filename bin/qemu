@@ -1,14 +1,20 @@
 #!/bin/sh -eu
 IMAGE="${1-output/images/output-*-default.img}"
+#sudo tunctl -u $USER -t tap0
 
 # -snapshot -no-shutdown \
 #    -usbdevice disk:format=raw:"$IMAGE" \
+#    -net tap,ifname=tap0 \
 qemu-system-x86_64 -m 1024M \
     -machine accel=kvm \
     -usb -device usb-ehci,id=ehci \
     -drive format=raw,file="$IMAGE" \
     -vga std \
     -monitor stdio \
+    \
+    -net nic,model=virtio,macaddr=52:54:00:12:34:56 \
+    -net user \
+    \
     -kernel output/rootfs/boot/vmlinuz-3.16.0-4-amd64 \
     -initrd output/rootfs/boot/initrd.img-3.16.0-4-amd64 \
     -append root="LABEL=twbox"
