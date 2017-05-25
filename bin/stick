@@ -55,8 +55,15 @@ do_extra_install() {
 
 do_grub_install() {
     mount_part
+    cat > ${MOUNTPOINT}/boot/grub/device.map <<EOF
+EOF
+    echo "# update-grub"
     do_chroot /usr/sbin/update-grub
-    do_chroot /usr/sbin/grub-install "${USBDEV}"
+    echo "# grub-install"
+    do_chroot /usr/sbin/grub-install \
+        --no-floppy \
+        --grub-mkdevicemap=/boot/grub/device.map \
+        "${USBDEV}"
 }
 
 do_copy_user() {
