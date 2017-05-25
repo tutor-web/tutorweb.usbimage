@@ -9,6 +9,8 @@ for f in \
         /var/lib/smly \
         /var/lib/dhcp/dhclient.leases \
         /var/log/lastlog \
+        /var/log/nginx/access.log \
+        /var/log/nginx/error.log \
         /srv/tutorweb.buildout \
         ; do
     mkdir -p `dirname $(br_rootfs_dir)${f}`

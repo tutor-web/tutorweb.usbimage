@@ -31,6 +31,11 @@ mkdir -p /var/local/etc/dnsmasq.d
     [ -e /usr/bin/mysql_install_db ] && /usr/bin/mysql_install_db
 }
 
+##### Nginx
+mkdir -p /var/local/var/log/nginx
+touch /var/local/var/log/nginx/access.log
+touch /var/local/var/log/nginx/error.log
+
 ##### Smileycoin
 [ -d /var/local/var/lib/smly ] || {
   mkdir -p /var/local/var/lib/smly
