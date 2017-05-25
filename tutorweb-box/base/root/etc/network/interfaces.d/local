@@ -14,3 +14,6 @@ iface wwan1 inet dhcp
 
 allow-hotplug wwan2
 iface wwan2 inet dhcp
+
+allow-hotplug other0
+iface other0 inet dhcp

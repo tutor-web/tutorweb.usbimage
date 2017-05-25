@@ -1,0 +1,14 @@
+#!/bin/sh -eu
+IMAGE="${1-output/images/output-*-default.img}"
+
+# -snapshot -no-shutdown \
+#    -usbdevice disk:format=raw:"$IMAGE" \
+qemu-system-x86_64 -m 1024M \
+    -machine accel=kvm \
+    -usb -device usb-ehci,id=ehci \
+    -drive format=raw,file="$IMAGE" \
+    -vga std \
+    -monitor stdio \
+    -kernel output/rootfs/boot/vmlinuz-3.16.0-4-amd64 \
+    -initrd output/rootfs/boot/initrd.img-3.16.0-4-amd64 \
+    -append root=/dev/sda1
