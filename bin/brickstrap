@@ -5,5 +5,7 @@ exec ./brickstrap/brickstrap.sh \
     -c base \
     -c tutorweb \
     -c smileycoin \
+    -c ka \
+    -c kiwix \
     -c usb_x86-64 \
     "$@"
