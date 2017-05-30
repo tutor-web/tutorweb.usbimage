@@ -9,4 +9,7 @@ bogus-priv
 resolv-file=/tmp/resolv.upstream.conf
 dhcp-leasefile=/run/dnsmasq.leases
 
+address=/.eias.lan/172.16.0.1
+address=/modem.eias.lan/192.168.8.1
+
 conf-dir=/var/local/etc/dnsmasq.d

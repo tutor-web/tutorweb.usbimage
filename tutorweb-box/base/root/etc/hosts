@@ -4,7 +4,7 @@
 ff02::1         ip6-allnodes
 ff02::2         ip6-allrouters
 
-172.16.0.1      eias.lan tutor-web.eias.lan kiwix.eias.lan ka.eias.lan coin.eias.lan box.smileyco.in
+172.16.0.1      eias.lan box.smileyco.in
 
 # twbox-${HOSTID} twbox-${HOSTID}.tutor-web.net 
 # ${LOCATION}.tutor-web.net
