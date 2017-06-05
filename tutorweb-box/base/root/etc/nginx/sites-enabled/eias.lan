@@ -1,0 +1,23 @@
+upstream shellinabox {
+  server 127.0.0.1:4200;
+}
+
+server {
+    listen 80 default_server;
+    listen [::]:80 default_server;
+
+    root /srv/eias.lan/www;
+
+    location /scripts/ {
+        gzip off;
+        root  /srv/eias.lan/scripts;
+
+        fastcgi_pass  unix:/var/run/fcgiwrap.socket;
+        include /etc/nginx/fastcgi_params;
+        fastcgi_param SCRIPT_FILENAME  /srv/eias.lan/$fastcgi_script_name;
+    }
+
+    location /shell/ {
+        proxy_pass http://shellinabox;
+    }
+}
