@@ -1,0 +1,6 @@
+# Add default user and give them sudo powers
+# twpasswd file should contain "tutor:$PASSWORD"
+
+br_chroot adduser --disabled-password --gecos \"\" tutor
+cat ./twpasswd | br_chroot chpasswd
+br_chroot usermod -a -G sudo tutor
