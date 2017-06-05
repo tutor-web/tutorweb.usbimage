@@ -1,6 +1,5 @@
 upstream ka {
-  # TODO: This must be wrong
-  server 127.0.0.1:8280;
+  server 127.0.0.1:8008;
 }
 
 server {
