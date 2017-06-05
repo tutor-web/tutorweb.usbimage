@@ -1,0 +1,7 @@
+ka-lite-bundle	ka-lite/contentpack-manual      note
+ka-lite-bundle	ka-lite/manual-instructions     note
+ka-lite-bundle	ka-lite/user			string  ka-lite
+ka-lite-bundle	ka-lite/kalite-settings		string
+ka-lite-bundle	ka-lite/preseed-dir		string  /usr/share/kalite/preseed
+ka-lite-bundle	ka-lite/ini			boolean true
+ka-lite-bundle	ka-lite/init-instructions	note
