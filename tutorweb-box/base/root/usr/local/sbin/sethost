@@ -88,19 +88,10 @@ PORTRANGE="5"
 [ "$HOSTID" = "7cb5e1" ] && { PORTRANGE="9"; }
 [ "$HOSTID" = "7ca4de" ] && { PORTRANGE="0"; }
 
-mkdir -p /var/local/etc/phonehome
-[ -f /var/local/etc/phonehome/known_hosts ] || {
-    cat <<EOF > /var/local/etc/phonehome/known_hosts
-|1|fyDx9+2kk4W3bDVbXSnhUo8pQ3k=|SUU625Nm1SjZZXhIuB4BNk5vIsA= ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBMaVIAuzuZM4iopQ6yjQLhyIf9kYDPBMtUAzQv+CHQxcYKC8ZZuoKoVb/8Z2FuSLdNoWuTi0jmkozAzBgRHpXhw=
-|1|qL/GdmwB3i8nIMJiVgdhovQD7EI=|9E2PFIHNh6klm7NKZh41/l1QkwM= ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBMaVIAuzuZM4iopQ6yjQLhyIf9kYDPBMtUAzQv+CHQxcYKC8ZZuoKoVb/8Z2FuSLdNoWuTi0jmkozAzBgRHpXhw=
-EOF
-}
-[ -f /var/local/etc/phonehome/id_rsa ] || {
-    ssh-keygen -N "" -f /var/local/etc/phonehome/id_rsa
-    chown nobody:nogroup /var/local/etc/phonehome/id_rsa*
-}
-[ -f /var/local/etc/phonehome/config ] || {
-    cat <<EOF > /var/local/etc/phonehome/config
+mkdir -p /run/phonehome
+cp /etc/phonehome/* /run/phonehome
+[ -f /run/phonehome/config ] || {
+    cat <<EOF > /run/phonehome/config
 Host phonehome
     User phonehome
     HostName tutor-web.net
@@ -109,3 +100,5 @@ Host phonehome
     RemoteForward 9${PORTRANGE}80 localhost:80
 EOF
 }
+chown nobody:nogroup /run/phonehome/*
+chmod 400 /run/phonehome/*

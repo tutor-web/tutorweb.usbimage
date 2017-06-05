@@ -8,13 +8,13 @@ User=nobody
 ExecStart=/usr/bin/ssh -NTC \
     -o ServerAliveInterval=60 \
     -o ExitOnForwardFailure=yes \
-    -o UserKnownHostsFile=/etc/phonehome/known_hosts \
-    -i /etc/phonehome/id_rsa \
-    -F /etc/phonehome/config \
+    -o UserKnownHostsFile=/run/phonehome/known_hosts \
+    -i /run/phonehome/id_rsa \
+    -F /run/phonehome/config \
     phonehome
 
 # Restart every >2 seconds to avoid StartLimitInterval failure
-RestartSec=3
+RestartSec=300
 Restart=always
 
 [Install]

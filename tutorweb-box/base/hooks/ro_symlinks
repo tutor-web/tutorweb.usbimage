@@ -4,7 +4,6 @@
 for f in \
         /etc/hostname \
         /etc/mailname \
-        /etc/phonehome \
         /var/lib/mysql \
         /var/lib/smly \
         /var/lib/dhcp/dhclient.leases \

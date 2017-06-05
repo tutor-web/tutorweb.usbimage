@@ -1,1 +1,4 @@
 /output/
+/tutorweb-box/base/root/etc/phonehome/id_rsa
+/tutorweb-box/base/root/etc/phonehome/id_rsa.pub
+/tutorweb-box/base/root/etc/phonehome/known_hosts
