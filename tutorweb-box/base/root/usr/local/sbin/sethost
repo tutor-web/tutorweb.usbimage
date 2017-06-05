@@ -25,6 +25,12 @@ done
 ##### DNSMasq
 mkdir -p /var/local/etc/dnsmasq.d
 
+##### nullmailer
+mount -t tmpfs tmpfs /var/spool/nullmailer
+mkdir -p /var/spool/nullmailer/queue
+mkdir -p /var/spool/nullmailer/tmp
+chown mail:root /var/spool/nullmailer/*
+
 ##### MySQL
 [ -d /var/local/var/lib/mysql ] || {
     mkdir -p /var/local/var/lib/mysql
