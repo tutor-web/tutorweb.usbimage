@@ -1,7 +1,7 @@
 auto br0
 iface br0 inet static
-    address 172.16.0.1
-    netmask 255.240.0.0
+    address 172.16.16.1
+    netmask 255.255.255.0
     bridge_ports int0
     bridge_maxwait 5
     up /sbin/iptables-restore < /etc/network/iptables.up.rules 
