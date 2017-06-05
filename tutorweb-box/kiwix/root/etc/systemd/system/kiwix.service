@@ -3,7 +3,7 @@ Description=Kiwix
 After=network.target
 
 [Service]
-ExecStart=/usr/local/bin/kiwix-serve --port=8280 --library /srv/kiwix/library.xml
+ExecStart=/usr/local/bin/kiwix-serve --port=8280 --library /run/kiwix-library.xml
 User=nobody
 Group=nogroup
 
