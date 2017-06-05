@@ -5,6 +5,3 @@ ff02::1         ip6-allnodes
 ff02::2         ip6-allrouters
 
 172.16.16.1	eias.lan box.smileyco.in
-
-# twbox-${HOSTID} twbox-${HOSTID}.tutor-web.net 
-# ${LOCATION}.tutor-web.net

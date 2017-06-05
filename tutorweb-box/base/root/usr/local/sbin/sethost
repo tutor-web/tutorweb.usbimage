@@ -23,6 +23,10 @@ done
 
 ##### DNSMasq
 mkdir -p /var/local/etc/dnsmasq.d
+cat <<EOF > /var/local/etc/dnsmasq.d/hosts
+cname=twbox-${HOSTID},eias.lan
+cname=twbox-${HOSTID}.tutor-web.net,eias.lan
+EOF
 
 ##### nullmailer
 mount -t tmpfs tmpfs /var/spool/nullmailer
