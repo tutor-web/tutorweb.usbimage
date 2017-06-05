@@ -5,6 +5,7 @@ After=network.target
 
 [Service]
 User=nobody
+Type=simple
 ExecStart=/usr/bin/ssh -NTC \
     -o ServerAliveInterval=60 \
     -o ExitOnForwardFailure=yes \
