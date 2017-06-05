@@ -101,4 +101,4 @@ Host phonehome
 EOF
 }
 chown nobody:nogroup /run/phonehome/*
-chmod 400 /run/phonehome/*
+chmod 600 /run/phonehome/*
