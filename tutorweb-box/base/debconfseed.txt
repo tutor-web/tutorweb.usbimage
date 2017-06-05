@@ -16,7 +16,7 @@ tzdata	tzdata/Areas		select
 tzdata	tzdata/Zones/Atlantic	select
 tzdata	tzdata/Zones/Indian	select
 
-nullmailer nullmailer/defaultdomain	
+nullmailer nullmailer/defaultdomain	box.tutor-web.net
 nullmailer nullmailer/relayhost		localhost smtp --port=9025
 nullmailer shared/mailname		twbox.tutor-web.net
 nullmailer nullmailer/adminaddr		admin@tutor-web.net
