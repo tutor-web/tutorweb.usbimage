@@ -3,8 +3,7 @@ HOSTID="000000"
 [ -f /sys/class/net/int0/address ] && HOSTID="$(/bin/sed 's/://g ; s/^.\{6\}//' /sys/class/net/int0/address)"
 
 # Mount /var/local, or if it's not there then use a tmpfs
-#TODO: Actually mount the other stick
-mount -t tmpfs tmpfs /var/local
+mount /dev/disk/by-label/twdata /var/local || mount -t tmpfs tmpfs /var/local
 
 mkdir -p /var/local/etc
 /bin/hostname twbox-$HOSTID
