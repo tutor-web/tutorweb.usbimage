@@ -29,5 +29,3 @@
 # Adding kiwix images
 
     wget -O /srv/kiwix -c http://.....zim
-    kiwix-index /srv/kiwix/math.stackexchange.com_en_all_2017-05.zim /srv/kiwix/
-    kiwix-manage /srv/kiwix/library.xml add /srv/kiwix/math.stackexchange.com_en_all_2017-05.zim 
