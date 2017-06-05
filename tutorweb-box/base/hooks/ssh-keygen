@@ -1,0 +1,5 @@
+for f in rsa dsa ecdsa ed25519; do
+    echo "generating ssh ${f} key..."
+    [ -f "$(br_rootfs_dir)/etc/ssh/ssh_host_${f}_key" ] && rm -- "$(br_rootfs_dir)/etc/ssh/ssh_host_${f}_key"
+    ssh-keygen -q -t ${f} -f "$(br_rootfs_dir)/etc/ssh/ssh_host_${f}_key" -C "" -N ""
+done
