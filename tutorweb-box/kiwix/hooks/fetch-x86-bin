@@ -1,4 +1,5 @@
-curl -L http://download.kiwix.org/bin/kiwix-linux-x86_64.tar.bz2 | 
+wget -O kiwix-linux-x86_64.tar.bz2 -c http://download.kiwix.org/bin/kiwix-linux-x86_64.tar.bz2
+cat kiwix-linux-x86_64.tar.bz2 | 
     tar -C $(br_rootfs_dir)/usr/local/bin/ --strip-components=2 -jxv \
         kiwix/bin/kiwix-manage \
         kiwix/bin/kiwix-index \
