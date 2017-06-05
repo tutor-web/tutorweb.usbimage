@@ -12,14 +12,8 @@
 
     ./bin/qemu --nogrub output/images/output-*-default.img
 
-    mount -o remount,rw /
-    dpkg-reconfigure openssh-server
-    apt-get update
-    apt-get install -t jessie-backports e2fsprogs nginx
-    apt-get install mysql-server libmysqlclient-dev shellinabox
-    update-initramfs
-    update-grub
-    grub-install /dev/sda
+    # Login as tutor
+    sudo /usr/local/sbin/finish-installation
 
 # Resizing stick
 
