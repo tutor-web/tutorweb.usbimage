@@ -7,3 +7,5 @@ usbutils
 curl
 wget
 ssl-cert
+strace
+netcat-traditional
