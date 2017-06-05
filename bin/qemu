@@ -1,7 +1,15 @@
 #!/bin/sh -eu
-IMAGE="${1-output/images/output-*-default.img}"
-#sudo tunctl -u $USER -t tap0
+EXTRA_OPTS=""
 
+[ "$1" = "--nogrub" ] && {
+    EXTRA_OPTS="${EXTRA_OPTS} -kernel output/rootfs/boot/vmlinuz-*"
+    EXTRA_OPTS="${EXTRA_OPTS} -initrd output/rootfs/boot/initrd.img-*"
+    EXTRA_OPTS="${EXTRA_OPTS} "'-append root="LABEL=twbox"'
+    shift
+}
+IMAGE="${1-output/images/output-*-default.img}"
+
+#sudo tunctl -u $USER -t tap0
 # -snapshot -no-shutdown \
 #    -usbdevice disk:format=raw:"$IMAGE" \
 #    -net tap,ifname=tap0 \
@@ -14,7 +22,4 @@ qemu-system-x86_64 -m 1024M \
     \
     -net nic,model=virtio,macaddr=52:54:00:12:34:56 \
     -net user \
-    \
-    -kernel output/rootfs/boot/vmlinuz-3.16.0-4-amd64 \
-    -initrd output/rootfs/boot/initrd.img-3.16.0-4-amd64 \
-    -append root="LABEL=twbox"
+    ${EXTRA_OPTS}
