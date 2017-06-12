@@ -118,4 +118,9 @@ chmod 600 /run/phonehome/*
 
 ##### kiwix
 echo "" > /run/kiwix-library.xml
-ls -1 /srv/kiwix/*.{zim,zimaa} /var/local/srv/kiwix/*.{zim,zimaa} | xargs -L1 kiwix-manage /run/kiwix-library.xml add
+ls -1 \
+    /srv/kiwix/*.zim \
+    /srv/kiwix/*.zimaa \
+    /var/local/srv/kiwix/*.zim \
+    /var/local/srv/kiwix/*.zimaa \
+    | xargs -L1 kiwix-manage /run/kiwix-library.xml add
