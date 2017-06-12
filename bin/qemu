@@ -20,6 +20,7 @@ qemu-system-x86_64 -m 1024M \
     -vga std \
     -monitor stdio \
     \
-    -net nic,model=virtio,macaddr=52:54:00:12:34:56 \
+    -net nic,model=virtio,macaddr=52:54:00:12:34:00 \
+    -net nic,model=e1000,macaddr=52:54:00:12:34:01,vlan=1,model=e1000 \
     -net user \
     ${EXTRA_OPTS}

@@ -2,8 +2,9 @@
 SUBSYSTEM=="net", KERNEL=="br*", GOTO="persistent_net_end"
 SUBSYSTEM=="net", KERNEL=="lo", GOTO="persistent_net_end"
 
-# Internal network port
+# Internal network port (e1000e - NUC, e1000 - QEMU)
 SUBSYSTEM=="net", DRIVERS=="e1000e", NAME="int0", GOTO="persistent_net_end"
+SUBSYSTEM=="net", DRIVERS=="e1000",  NAME="int0", GOTO="persistent_net_end"
 
 # Internal wifi card
 SUBSYSTEM=="net", DRIVERS=="iwlwifi", NAME="wlan0", GOTO="persistent_net_end"
