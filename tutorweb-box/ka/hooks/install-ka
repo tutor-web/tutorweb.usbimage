@@ -1,3 +1,9 @@
 wget -O kalite-bundle.deb -c https://learningequality.org/r/deb-bundle-installer-0-17
+
+cat <<EOF | br_chroot debconf-set-selections
+ka-lite-bundle	ka-lite/user	string	kalite
+EOF
+
 cp kalite-bundle.deb $(br_rootfs_dir)/
 br_chroot dpkg -i /kalite-bundle.deb
+rm -- $(br_rootfs_dir)/kalite-bundle.deb

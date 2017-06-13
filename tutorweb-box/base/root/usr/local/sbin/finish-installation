@@ -13,3 +13,9 @@ apt-get install -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force
 update-initramfs -k all -u
 update-grub
 grub-install /dev/sda
+
+[ -f /var/local/kalite-bundle.deb ] && dpkg -i /var/local/kalite-bundle.deb
+[ -d /var/kalite ] && {
+    mv /var/kalite /var/kalite.default
+    ln -s /var/local/var/kalite /var/kalite
+}
