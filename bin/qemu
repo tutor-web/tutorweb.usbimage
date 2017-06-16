@@ -1,26 +1,22 @@
 #!/bin/sh -eu
-EXTRA_OPTS=""
+CMD_LINE="qemu-system-x86_64 -m 2G -machine accel=kvm -usb -device usb-ehci,id=ehci"
+CMD_LINE="${CMD_LINE} -vga std -monitor stdio"
+
+CMD_LINE="${CMD_LINE} -net nic,model=virtio,macaddr=52:54:00:12:34:00"
+CMD_LINE="${CMD_LINE} -net user"
+CMD_LINE="${CMD_LINE} -net nic,model=e1000,macaddr=52:54:00:12:34:01,vlan=1,model=e1000"
+CMD_LINE="${CMD_LINE} -net tap,ifname=tap1,vlan=1"
 
 [ "$1" = "--nogrub" ] && {
-    EXTRA_OPTS="${EXTRA_OPTS} -kernel output/rootfs/boot/vmlinuz-*"
-    EXTRA_OPTS="${EXTRA_OPTS} -initrd output/rootfs/boot/initrd.img-*"
-    EXTRA_OPTS="${EXTRA_OPTS} "'-append root="LABEL=twbox"'
+    CMD_LINE="${CMD_LINE} -kernel output/rootfs/boot/vmlinuz-*"
+    CMD_LINE="${CMD_LINE} -initrd output/rootfs/boot/initrd.img-*"
+    CMD_LINE="${CMD_LINE} "'-append root="LABEL=twbox"'
     shift
 }
-IMAGE="${1-output/images/output-*-default.img}"
 
-#sudo tunctl -u $USER -t tap0
-# -snapshot -no-shutdown \
-#    -usbdevice disk:format=raw:"$IMAGE" \
-#    -net tap,ifname=tap0 \
-qemu-system-x86_64 -m 1024M \
-    -machine accel=kvm \
-    -usb -device usb-ehci,id=ehci \
-    -drive format=raw,file="$IMAGE" \
-    -vga std \
-    -monitor stdio \
-    \
-    -net nic,model=virtio,macaddr=52:54:00:12:34:00 \
-    -net nic,model=e1000,macaddr=52:54:00:12:34:01,vlan=1,model=e1000 \
-    -net user \
-    ${EXTRA_OPTS}
+IMAGE="${1-output/images/output-*-default.img}"
+TWDATA_IMAGE="${2-/non/existant}"
+[ -e ${IMAGE} ] && CMD_LINE="${CMD_LINE} -drive format=raw,file=$IMAGE"
+[ -e ${TWDATA_IMAGE} ] && CMD_LINE="${CMD_LINE} -usbdevice disk:format=raw:${TWDATA_IMAGE}"
+
+eval ${CMD_LINE}
