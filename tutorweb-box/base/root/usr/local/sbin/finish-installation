@@ -32,6 +32,8 @@ EOF
 [ -d /var/kalite ] && {
     mv /var/kalite /var/kalite.default
     ln -s /var/local/var/kalite /var/kalite
+    echo "/var/kalite/.kalite" > /etc/ka-lite/home
+}
 
 [ -f /srv/tutorweb.buildout/buildout.cfg ] && {
     (cd /srv/tutorweb.buildout && sudo -ututorweb ./bin/buildout; )
