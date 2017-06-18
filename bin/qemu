@@ -17,6 +17,6 @@ CMD_LINE="${CMD_LINE} -net tap,ifname=tap1,vlan=1"
 IMAGE="${1-output/images/output-*-default.img}"
 TWDATA_IMAGE="${2-/non/existant}"
 [ -e ${IMAGE} ] && CMD_LINE="${CMD_LINE} -drive format=raw,file=$IMAGE"
-[ -e ${TWDATA_IMAGE} ] && CMD_LINE="${CMD_LINE} -usbdevice disk:format=raw:${TWDATA_IMAGE}"
+[ -e ${TWDATA_IMAGE} ] && CMD_LINE="${CMD_LINE} -drive format=raw,if=virtio,file=${TWDATA_IMAGE}"
 
 eval ${CMD_LINE}
