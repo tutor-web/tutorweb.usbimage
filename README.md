@@ -18,6 +18,17 @@
 # Resizing stick
 
     fdisk -c=dos /dev/sdb
+    p
+    d1
+    n
+    p
+    1
+    128
+    
+    n
+    p
+    w
+    e2fsck -f /dev/sdb1
     resize2fs /dev/sdb1
 
 # Adding kiwix images
