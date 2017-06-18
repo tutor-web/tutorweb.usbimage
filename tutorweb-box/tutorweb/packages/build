@@ -1,7 +1,9 @@
 file
 python
 python-dev
+python-virtualenv
 git
 build-essential
 libxml2-dev
 libxslt1-dev
+libjpeg8-dev
