@@ -24,5 +24,6 @@ server {
 
   location / {
     proxy_pass http://plone/VirtualHostBase/$scheme/$host:$server_port/tutor-web/VirtualHostRoot$request_uri;
+    proxy_cache off;
   }
 }

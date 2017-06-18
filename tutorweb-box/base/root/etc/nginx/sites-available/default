@@ -19,5 +19,6 @@ server {
 
     location /shell/ {
         proxy_pass http://shellinabox;
+        proxy_cache off;
     }
 }

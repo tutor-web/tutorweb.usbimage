@@ -14,6 +14,20 @@ update-initramfs -k all -u
 update-grub
 grub-install /dev/sda
 
+cat <<EOF > /etc/mysql/conf.d/no-error-log.cnf
+[mysqld]
+general_log = 0
+log_error = /tmp/mysql_error.log
+EOF
+
+cat <<EOF > /etc/nginx/conf.d/proxy_cache.conf
+proxy_cache off;
+proxy_cache_path /var/local/nginx-proxy keys_zone=one:1M max_size=1024;
+
+client_body_buffer_size 1M;
+client_body_temp_path /var/local/nginx-client;
+EOF
+
 [ -f /var/local/kalite-bundle.deb ] && dpkg -i /var/local/kalite-bundle.deb
 [ -d /var/kalite ] && {
     mv /var/kalite /var/kalite.default
