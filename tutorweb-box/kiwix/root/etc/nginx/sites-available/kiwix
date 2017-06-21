@@ -10,5 +10,7 @@ server {
   location / {
     proxy_pass http://kiwix;
     proxy_cache off;
+    # https://github.com/kiwix/kiwix-tools/issues/15
+    proxy_set_header Accept-Encoding "";
   }
 }
