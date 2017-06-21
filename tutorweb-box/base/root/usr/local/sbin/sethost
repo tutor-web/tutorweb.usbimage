@@ -46,6 +46,7 @@ chown mail:root /var/spool/nullmailer/*
 
 ##### Nginx
 mkdir -p /var/local/var/log/nginx
+mkdir -p /var/local/var/lib/nginx
 touch /var/local/var/log/nginx/access.log
 touch /var/local/var/log/nginx/error.log
 

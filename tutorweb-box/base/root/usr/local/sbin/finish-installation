@@ -20,9 +20,14 @@ general_log = 0
 log_error = /tmp/mysql_error.log
 EOF
 
+[ -d /var/lib/nginx ] && {
+  mv /var/lib/nginx /var/lib/nginx.o
+  ln -s /var/local/var/lib/nginx /var/lib/nginx
+}
+
 cat <<EOF > /etc/nginx/conf.d/proxy_cache.conf
 proxy_cache off;
-proxy_cache_path /var/local/nginx-proxy keys_zone=one:1M max_size=1024;
+proxy_cache_path /var/local/nginx-proxy keys_zone=one:10M;
 
 client_body_buffer_size 1M;
 client_body_temp_path /var/local/nginx-client;
