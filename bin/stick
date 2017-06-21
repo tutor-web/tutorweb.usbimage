@@ -2,16 +2,22 @@
 MOUNTPOINT=./tmpmnt
 USBDEV="$1" ; shift
 CMD="$1" ; shift
+if [ -f "${USBDEV}" ] ; then
+    USBIMAGE="${USBDEV}"
+    USBDEV="$(losetup -P --find --show "${USBDEV}")"
+    USBPART="$(losetup --find --show "${USBDEV}p1")"
+else
+    if [ -b "${USBDEV}-part1" ]; then
+        USBPART="${USBDEV}-part1"
+    elif [ -b "${USBDEV}1" ]; then
+        USBPART="${USBDEV}1"
+    else
+        echo "Cannot find USBPART for ${}"
+        exit 1
+    fi
+fi
 
 mount_part() {
-    if [ -f "${USBDEV}" ] ; then
-        USBIMAGE="${USBDEV}"
-        USBDEV="$(losetup -P --find --show "${USBDEV}")"
-        USBPART="$(losetup --find --show "${USBDEV}p1")"
-    else
-        USBPART="${USBDEV}-part1"
-        [ -b "${USBPART}" ] || { echo "${USBPART} does not exist"; exit 1; }
-    fi
     echo Mounting ${USBPART} at $MOUNTPOINT ...
     mountpoint -q "$MOUNTPOINT" || mount "${USBPART}" "$MOUNTPOINT" || exit 1
 }
@@ -79,6 +85,21 @@ do_copy_user() {
         grep -E "^${NEWUSER}:" /etc/$f >> "$MOUNTPOINT/etc/$f"
     done
     do_chroot /usr/sbin/usermod -aG sudo ${NEWUSER}
+}
+
+do_fill_stick() {
+  PART_START=$(echo p | fdisk /dev/sda | awk '/^\/dev\/sda1/ { print $2 }')
+  (
+     echo p
+     echo d1
+     echo n
+     echo p
+     echo 1
+     echo ${PART_START}
+     echo 
+     echo p
+     echo w
+  ) | fdisk -c=dos ${USBDEV} && e2fsck -f ${USBPART} && resize2fs ${USBPART}
 }
 
 [ -d "$MOUNTPOINT" ] || mkdir -- "$MOUNTPOINT"
