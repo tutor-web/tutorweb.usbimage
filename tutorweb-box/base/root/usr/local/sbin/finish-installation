@@ -40,6 +40,6 @@ EOF
     echo "/var/kalite/.kalite" > /etc/ka-lite/home
 }
 
-[ -f /srv/tutorweb.buildout/buildout.cfg ] && {
+[ -f /srv/tutorweb.buildout/bin/buildout ] && {
     (cd /srv/tutorweb.buildout && sudo -ututorweb ./bin/buildout; )
 }
