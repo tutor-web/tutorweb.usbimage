@@ -11,7 +11,7 @@ upstream plone {
 server {
   listen [::]:80;
   listen      80;
-  server_name tutor-web.eias.lan;
+  server_name tutor-web.eias.lan *.tutor-web.net;
 
   location ~ ^/manage {
     deny all;
