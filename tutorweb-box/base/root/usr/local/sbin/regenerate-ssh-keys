@@ -1,0 +1,9 @@
+#!/bin/sh -e
+
+mount -o remount,rw /
+
+for f in rsa dsa ecdsa ed25519; do
+    echo "generating ssh ${f} key..."
+    [ -f "/etc/ssh/ssh_host_${f}_key" ] && rm -- "/etc/ssh/ssh_host_${f}_key"
+    ssh-keygen -q -t ${f} -f "/etc/ssh/ssh_host_${f}_key" -C "" -N ""
+done
