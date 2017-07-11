@@ -17,3 +17,31 @@ iface wwan2 inet dhcp
 
 allow-hotplug other0
 iface other0 inet dhcp
+
+allow-hotplug int1
+iface int1 inet manual
+    pre-up ifconfig ${IFACE} 0.0.0.0 up
+    post-up brctl addif br0 ${IFACE}
+    pre-down brctl delif br0 ${IFACE}
+    post-down ifconfig ${IFACE} down
+
+allow-hotplug int2
+iface int2 inet manual
+    pre-up ifconfig ${IFACE} 0.0.0.0 up
+    post-up brctl addif br0 ${IFACE}
+    pre-down brctl delif br0 ${IFACE}
+    post-down ifconfig ${IFACE} down
+
+allow-hotplug int3
+iface int3 inet manual
+    pre-up ifconfig ${IFACE} 0.0.0.0 up
+    post-up brctl addif br0 ${IFACE}
+    pre-down brctl delif br0 ${IFACE}
+    post-down ifconfig ${IFACE} down
+
+allow-hotplug int4
+iface int4 inet manual
+    pre-up ifconfig ${IFACE} 0.0.0.0 up
+    post-up brctl addif br0 ${IFACE}
+    pre-down brctl delif br0 ${IFACE}
+    post-down ifconfig ${IFACE} down

@@ -9,6 +9,10 @@ SUBSYSTEM=="net", DRIVERS=="e1000",  NAME="int0", GOTO="persistent_net_end"
 # Internal wifi card
 SUBSYSTEM=="net", DRIVERS=="iwlwifi", NAME="wlan0", GOTO="persistent_net_end"
 
+# USB modem used for extra access point
+SUBSYSTEM=="net", DRIVERS=="usb", ATTR{address}=="1a:ff:0f:fe:10:22", \
+    NAME="int1", GOTO="persistent_net_end"
+
 # USB devices are consided external access
 SUBSYSTEM=="net", ACTION=="add", DRIVERS=="usb", NAME="wwan%n", GOTO="persistent_net_end"
 
