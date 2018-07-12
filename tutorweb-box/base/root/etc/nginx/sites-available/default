@@ -22,3 +22,22 @@ server {
         proxy_cache off;
     }
 }
+
+server {
+  listen [::]:80;
+  listen      80;
+  server_name captive.apple.com;
+  server_name connectivitycheck.gstatic.com;
+  server_name clients3.google.com;
+
+  root /srv/eias.lan/www;
+
+  location /hotspot-detect.html {
+    add_header Content-Type text/html;
+    return 200 '<HTML><HEAD><TITLE>Success</TITLE></HEAD><BODY>Success</BODY></HTML>';
+  }
+
+  location /generate_204 {
+    return 204;
+  }
+}
