@@ -14,9 +14,10 @@ Install via. NetInstall / Debricking
 Firstly try resetting. Hold reset button for 5 seconds whilst turning on, until USR starts flashing.
 https://wiki.mikrotik.com/wiki/Manual:Reset_button
 
-Visit https://mikrotik.com/download, get
-* Base packages for mipsbe
-* netinstall
+Visit https://mikrotik.com/download, and get:
+
+* Base packages for mipsbe, e.g: https://download.mikrotik.com/routeros/6.42.6/routeros-mipsbe-6.42.6.npk
+* NetInstall, e.g: https://download.mikrotik.com/routeros/6.42.6/netinstall-6.42.6.zip
 
 Run netinstall in Windows VM, using a tap0 not user interface. Make sure windows is using a "home" network
 
