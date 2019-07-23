@@ -19,6 +19,7 @@ To restore to factory condition:
 
 Then access the web configuration pages:
 
+* Disconnect the EIAS NUC. If connected, whether the access point or the NUC gives you an IP address will be random.
 * Connect a laptop to either eth1 or the default access point "MikroTik". For more information, see the [Quick start guide](https://i.mt.lv/cdn/rb_files/mAP-qg.pdf).
 * Your laptop should get configured with an IP address in the ``192.168.88.x`` range. If not, assign one.
 * Connect to ``192.168.88.1``.
@@ -30,7 +31,7 @@ Then restore the tutor-web configuration:
 * Click on file
 * Click "Restore" button at top
 
-After reboot, the router's IP address will be requested from whatever network is connected to it's ethernet port, so it needs to be connected to a EIAS NUC from this point on.
+After reboot, the router will not assign an IP address, so you need to have an EIAS NUC connected from this point on.
 
 Install via. NetInstall / Debricking
 ------------------------------------
