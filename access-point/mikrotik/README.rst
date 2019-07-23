@@ -8,6 +8,30 @@ We currently have the following accesspoints:
 
 Most of the below applies to both.
 
+Initial reset / configuration
+-----------------------------
+
+To restore to factory condition:
+
+* Hold down reset button
+* Power on, wait 5 seconds (USR should blink)
+* Release
+
+Then access the web configuration pages:
+
+* Connect a laptop to either eth1 or the default access point "MikroTik". For more information, see the [Quick start guide](https://i.mt.lv/cdn/rb_files/mAP-qg.pdf).
+* Your laptop should get configured with an IP address in the ``192.168.88.x`` range. If not, assign one.
+* Connect to ``192.168.88.1``.
+
+Then restore the tutor-web configuration:
+
+* Go to http://192.168.88.1/webfig/#Files
+* Upload relevant ``.backup`` file from the top of this page, e.g. ``tutorweb-box-map-2nd.backup``
+* Click on file
+* Click "Restore" button at top
+
+After reboot, the router's IP address will be requested from whatever network is connected to it's ethernet port, so it needs to be connected to a EIAS NUC from this point on.
+
 Install via. NetInstall / Debricking
 ------------------------------------
 
@@ -36,24 +60,6 @@ Router should appear in list.
 * Press "install"
 
 Once the router reboots, set MAC address and password.
-
-Initial reset
--------------
-
-* Hold down reset button
-* Power on, wait 5 seconds (USR should blink)
-* Release
-* Connect to ``192.168.88.1`` (there should be a DHCP server running to give you an IP address)
-
-Restoring config
-----------------
-
-* Go to http://192.168.88.1/webfig/#Files
-* Upload relevant backup file
-* Click on file
-* Click "Restore" button at top
-
-After reboot, the router's IP address will be requested from whatever network is connected to it's ethernet port.
 
 Manual reconfig
 ---------------
