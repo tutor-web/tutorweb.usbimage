@@ -15,5 +15,6 @@ address=/modem.eias.lan/192.168.8.1
 address=/captive.apple.com/172.16.16.1
 address=/connectivitycheck.gstatic.com/172.16.16.1
 address=/clients3.google.com/172.16.16.1
+address=/detectportal.firefox.com/172.16.16.1
 
 conf-dir=/var/local/etc/dnsmasq.d
