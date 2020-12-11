@@ -9,4 +9,3 @@ Group=nogroup
 
 [Install]
 WantedBy=multi-user.target
-Alias=smly.service
