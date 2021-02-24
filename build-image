@@ -1,0 +1,22 @@
+#!/bin/sh -eu
+
+# NB: preboot-base.sh hard-codes debian backport version
+virt-builder debian-10 \
+    --output eias.img --format raw --size 10G \
+    --hostname tutorweb-box \
+    --root-password password:tuttuttut \
+    --arch amd64 \
+    --copy-in 'conf/overlay-webserver/srv:/' \
+    --run conf/preboot-base.sh \
+    --run conf/preboot-network.sh \
+    --run conf/preboot-webserver.sh \
+    --run conf/preboot-webserver-fakeinternet.sh \
+    --run conf/preboot-webserver-shellinabox.sh \
+    --timezone UTC
+
+# conf/preboot-tutorweb.sh
+
+# TODO: 
+#br_chroot adduser --disabled-password --gecos \"\" --uid 1000 --gid 1000 tutor
+#cat ./twpasswd | br_chroot chpasswd
+#br_chroot usermod -a -G sudo tutor

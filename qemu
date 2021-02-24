@@ -1,0 +1,30 @@
+#!/bin/sh -eu
+CMD_LINE="qemu-system-x86_64 -m 2G -machine accel=kvm -usb -device usb-ehci,id=ehci"
+
+# CMD_LINE="${CMD_LINE} -vga std -monitor stdio"
+CMD_LINE="${CMD_LINE} -nographic -monitor none -serial stdio"
+
+CMD_LINE="${CMD_LINE} -netdev tap,id=int_net,ifname=tap1"
+CMD_LINE="${CMD_LINE} -device e1000,netdev=int_net"
+CMD_LINE="${CMD_LINE} -netdev user,id=ext_net"
+CMD_LINE="${CMD_LINE} -device virtio-net,netdev=ext_net"
+
+IMAGE="${1-eias.img}"
+TWDATA_IMAGE="${2-/non/existant}"
+[ -e ${IMAGE} ] && CMD_LINE="${CMD_LINE} -drive format=raw,if=virtio,file=$IMAGE"
+[ -e ${TWDATA_IMAGE} ] && CMD_LINE="${CMD_LINE} -drive format=raw,if=virtio,file=${TWDATA_IMAGE}"
+
+# Save current terminal settings (for restoring later)
+# https://fragdev.com/blog/using-qemu-inside-terminal-serial-output
+STTY_SETTINGS="$( stty -g )"
+
+# Override Ctrl+c and Ctrl+z to prevent killing the VM in horrid ways
+# ( Set to right bracket, can be changed if that combination is used )
+stty intr ^]
+stty susp ^]
+
+echo ${CMD_LINE}
+eval ${CMD_LINE}
+
+# Reset the terminal
+stty "$STTY_SETTINGS"
