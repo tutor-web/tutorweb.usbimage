@@ -133,8 +133,6 @@ COMMIT
 COMMIT
 EOF
 
-ln -fs /etc/resolvconf/run/resolv.conf /etc/resolv.conf
-
 mkdir -p /etc/dnsmasq.d ; cat <<'EOF' > /etc/dnsmasq.d/local-config
 interface=br0
 dhcp-range=172.16.16.10,172.16.16.255,1h
