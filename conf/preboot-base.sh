@@ -64,7 +64,7 @@ apt-get update
 apt-get purge -y rsyslog
 
 # admin
-apt-get install -y sudo locales dialog nullmailer apt-utils cron logrotate elinks links2 ntpdate
+apt-get install -y sudo locales dialog nullmailer apt-utils cron logrotate elinks links2
 
 # firmware
 apt-get install -y firmware-linux
