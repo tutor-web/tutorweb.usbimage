@@ -6,50 +6,61 @@ auto br0
 iface br0 inet static
     address 172.16.16.1
     netmask 255.255.255.0
-    bridge_ports int0
+    bridge_ports none
     bridge_maxwait 5
     up /sbin/iptables-restore < /etc/network/iptables.up.rules
+    # NB: "allow-hotplug" won't work for PCI, and don't know the number to use "auto"
+    post-up ifup $(ls -1 /sys/class/net | grep -E '^int')
+
+iface net-bridge inet manual
+    pre-up ifconfig ${IFACE} 0.0.0.0 up
+    post-up brctl addif br0 ${IFACE}
+    pre-down brctl delif br0 ${IFACE}
+    post-down ifconfig ${IFACE} down
+
+iface net-wwan inet dhcp
 
 allow-hotplug wwan0
-iface wwan0 inet dhcp
-
 allow-hotplug wwan1
-iface wwan1 inet dhcp
-
 allow-hotplug wwan2
-iface wwan2 inet dhcp
-
-allow-hotplug other0
-iface other0 inet dhcp
-
+allow-hotplug wwan3
+allow-hotplug wwan4
+allow-hotplug wwan5
+allow-hotplug wwan6
+allow-hotplug wwan7
+allow-hotplug wwan8
+allow-hotplug wwan9
+allow-hotplug int0
 allow-hotplug int1
-iface int1 inet manual
-    pre-up ifconfig ${IFACE} 0.0.0.0 up
-    post-up brctl addif br0 ${IFACE}
-    pre-down brctl delif br0 ${IFACE}
-    post-down ifconfig ${IFACE} down
-
 allow-hotplug int2
-iface int2 inet manual
-    pre-up ifconfig ${IFACE} 0.0.0.0 up
-    post-up brctl addif br0 ${IFACE}
-    pre-down brctl delif br0 ${IFACE}
-    post-down ifconfig ${IFACE} down
-
 allow-hotplug int3
-iface int3 inet manual
-    pre-up ifconfig ${IFACE} 0.0.0.0 up
-    post-up brctl addif br0 ${IFACE}
-    pre-down brctl delif br0 ${IFACE}
-    post-down ifconfig ${IFACE} down
-
 allow-hotplug int4
-iface int4 inet manual
-    pre-up ifconfig ${IFACE} 0.0.0.0 up
-    post-up brctl addif br0 ${IFACE}
-    pre-down brctl delif br0 ${IFACE}
-    post-down ifconfig ${IFACE} down
+allow-hotplug int5
+allow-hotplug int6
+allow-hotplug int7
+allow-hotplug int8
+allow-hotplug int9
+mapping *
+    script /etc/network/mapping.sh
 EOF
+
+cat <<'EOF' > /etc/network/mapping.sh
+case $1 in
+    lo)
+        echo "lo"
+        ;;
+    br0)
+        echo "br0"
+        ;;
+    wwan*)
+        echo "net-wwan"
+        ;;
+    *)
+        echo "net-bridge"
+        ;;
+esac
+EOF
+chmod a+x /etc/network/mapping.sh
 
 cat <<'EOF' > /etc/network/iptables.up.rules
 *filter
@@ -121,6 +132,8 @@ COMMIT
 
 COMMIT
 EOF
+
+ln -fs /etc/resolvconf/run/resolv.conf /etc/resolv.conf
 
 mkdir -p /etc/dnsmasq.d ; cat <<'EOF' > /etc/dnsmasq.d/local-config
 interface=br0
@@ -202,22 +215,21 @@ cat <<'EOF' > /etc/udev/rules.d/70-persistent-net.rules
 SUBSYSTEM=="net", KERNEL=="br*", GOTO="persistent_net_end"
 SUBSYSTEM=="net", KERNEL=="lo", GOTO="persistent_net_end"
 
-# Internal network port (e1000e - NUC, e1000 - QEMU)
-SUBSYSTEM=="net", DRIVERS=="e1000e", NAME="int0", GOTO="persistent_net_end"
-SUBSYSTEM=="net", DRIVERS=="e1000",  NAME="int0", GOTO="persistent_net_end"
+# USB modem used for extra access point
+SUBSYSTEM=="net", DRIVERS=="usb", ATTR{address}=="1a:ff:0f:fe:10:22", \
+    NAME="int%n", GOTO="persistent_net_end"
 
 # Internal wifi card
 SUBSYSTEM=="net", DRIVERS=="iwlwifi", NAME="wlan0", GOTO="persistent_net_end"
 
-# USB modem used for extra access point
-SUBSYSTEM=="net", DRIVERS=="usb", ATTR{address}=="1a:ff:0f:fe:10:22", \
-    NAME="int1", GOTO="persistent_net_end"
-
 # USB devices are consided external access
 SUBSYSTEM=="net", ACTION=="add", DRIVERS=="usb", NAME="wwan%n", GOTO="persistent_net_end"
 
-# Anything else is unknown
-SUBSYSTEM=="net", ACTION=="add", NAME="other%n", GOTO="persistent_net_end"
+# virtio devices are external, for development
+SUBSYSTEM=="net", ACTION=="add", SUBSYSTEMS=="virtio", NAME="wwan%n", GOTO="persistent_net_end"
+
+# Anything else internal, and connects to bridge
+SUBSYSTEM=="net", ACTION=="add", NAME="int%n", GOTO="persistent_net_end"
 LABEL="persistent_net_end"
 EOF
 
@@ -232,7 +244,7 @@ SUBSYSTEMS=="scsi", \
     RUN += "/usr/sbin/usb_modeswitch -v12d1 -p1f01 -M55534243123456780000000000000a11062000000000000100000000000000"
 EOF
 
-apt-get install -y net-tools ifupdown bridge-utils dnsmasq hostapd iw ssh usb-modeswitch iptables iputils-ping isc-dhcp-client rsync
+apt-get install -y net-tools ifupdown bridge-utils dnsmasq resolvconf hostapd iw ssh usb-modeswitch iptables iputils-ping isc-dhcp-client rsync
 
 cat <<'EOF' > /etc/default/hostapd
 DAEMON_CONF="/etc/hostapd/hostapd.conf"
@@ -245,8 +257,9 @@ cat <<'EOSH' > /usr/local/sbin/sethost
 #!/bin/sh
 
 ##### Hostname
+ADDR_FILE="$(ls -1 /sys/class/net/int*/address | head -1)"
 HOSTID="000000"
-[ -f /sys/class/net/int0/address ] && HOSTID="$(/bin/sed 's/://g ; s/^.\{6\}//' /sys/class/net/int0/address)"
+[ -f "${ADDR_FILE}" ] && HOSTID="$(/bin/sed 's/://g ; s/^.\{6\}//' /sys/class/net/int0/address)"
 /bin/hostname twbox-$HOSTID
 /bin/hostname > /run/hostname
 echo "twbox-${HOSTID}.tutor-web.net" > /run/mailname
