@@ -259,7 +259,7 @@ cat <<'EOSH' > /usr/local/sbin/sethost
 ##### Hostname
 ADDR_FILE="$(ls -1 /sys/class/net/int*/address | head -1)"
 HOSTID="000000"
-[ -f "${ADDR_FILE}" ] && HOSTID="$(/bin/sed 's/://g ; s/^.\{6\}//' /sys/class/net/int0/address)"
+[ -f "${ADDR_FILE}" ] && HOSTID="$(/bin/sed 's/://g ; s/^.\{6\}//' "${ADDR_FILE}")"
 /bin/hostname twbox-$HOSTID
 /bin/hostname > /run/hostname
 echo "twbox-${HOSTID}.tutor-web.net" > /run/mailname
