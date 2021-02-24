@@ -60,6 +60,9 @@ deb http://deb.debian.org/debian buster-backports main
 EOF
 apt-get update
 
+# Unneeded things from image
+apt-get purge -y rsyslog
+
 # admin
 apt-get install -y sudo locales dialog nullmailer apt-utils cron logrotate elinks links2 ntpdate
 
