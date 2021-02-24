@@ -1,6 +1,13 @@
 #!/bin/sh -eu
 # Run in ~chroot env on image creation
 
+cat <<'EOF' > /etc/dnsmasq.d/fakeinternet
+address=/captive.apple.com/172.16.16.1
+address=/connectivitycheck.gstatic.com/172.16.16.1
+address=/clients3.google.com/172.16.16.1
+address=/detectportal.firefox.com/172.16.16.1
+EOF
+
 mkdir -p /etc/nginx/sites-available ; cat <<'EOF' > /etc/nginx/sites-available/fakeinternet
 server {
   listen [::]:80;

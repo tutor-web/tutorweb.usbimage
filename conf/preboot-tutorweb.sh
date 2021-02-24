@@ -16,24 +16,25 @@ EOF
 
 (cd /srv/tutorweb.buildout && sudo -ututorweb ./bin/buildout; )
 
-cat <<'EOSH' >> /usr/local/sbin/sethost
+cat <<'EOSH' > /usr/local/sbin/tutorweb-setup
+#!/bin/sh -eu
 
 ##### MySQL
-[ -d /var/local/var/lib/mysql ] || {
-    mkdir -p /var/local/var/lib/mysql
+[ -d /var/lib/mysql ] || {
+    mkdir -p /var/lib/mysql
     [ -e /usr/bin/mysql_install_db ] && /usr/bin/mysql_install_db
 }
 
 ##### Tutor-web
-mkdir -p /var/local/srv/tutorweb.buildout
-mkdir -p /var/local/srv/tutorweb.buildout/var/log
+mkdir -p /var/local/tutorweb.buildout
+mkdir -p r/var/local/tutorweb.buildout/var/log
 mount -t tmpfs tmpfs /srv/tutorweb.buildout/var/log
-[ -f /var/local/srv/tutorweb.buildout/buildout.cfg ] || {
+[ -f /var/local/tutorweb.buildout/buildout.cfg ] || {
     MYSQLPASS="$(xxd -ps -l 22 /dev/urandom)"
     TWPASS="$(xxd -ps -l 22 /dev/urandom)"
     RPCPASS="$(awk -F= '/rpcpassword\=/ { print $2; }' /var/lib/smly/smileycoin.conf)"
     WALLETPASS="$(xxd -ps -l 22 /dev/urandom)"
-    cat <<'EOF' > /var/local/srv/tutorweb.buildout/buildout.cfg
+    cat <<'EOF' > /var/local/tutorweb.buildout/buildout.cfg
 [buildout]
 extends = cfgs/production.cfg
 always-checkout = false
@@ -56,5 +57,5 @@ smlyrpc = ${RPCPASS}
 smlywallet = ${WALLETPASS}
 EOF
 }
-
 EOSH
+chmod a+x /usr/local/sbin/tutorweb-setup

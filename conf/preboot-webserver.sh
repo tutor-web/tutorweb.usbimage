@@ -47,16 +47,3 @@ proxy_cache_path /var/local/nginx-proxy keys_zone=one:10M;
 client_body_buffer_size 1M;
 client_body_temp_path /var/local/nginx-client;
 EOF
-
-
-cat <<'EOF' >> /usr/local/sbin/sethost
-
-##### Nginx
-mkdir -p /var/local/var/log/nginx
-mkdir -p /var/local/var/lib/nginx
-touch /var/local/var/log/nginx/access.log
-touch /var/local/var/log/nginx/error.log
-mount --bind /var/local/var/lib/nginx /var/lib/nginx
-mount --bind /var/local/var/log/nginx /var/log/nginx
-
-EOF

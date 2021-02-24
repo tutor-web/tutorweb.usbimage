@@ -1,9 +1,10 @@
 #!/bin/sh -eu
 # Run in ~chroot env on image creation
 
-cat <<'EOSH' >> /usr/local/sbin/sethost
+cat <<'EOSH' >> /usr/local/sbin/smileycoin-setup
+#!/bin/sh
 
-[ -d /var/local/var/lib/smly ] || {
+[ -d /var/lib/smly ] || {
   mkdir -p /var/local/var/lib/smly
   chown smly:staff /var/local/var/lib/smly
 }
@@ -12,5 +13,5 @@ cat <<'EOSH' >> /usr/local/sbin/sethost
     echo "rpcuser=smileycoinrpc" > /var/lib/smly/smileycoin.conf
     echo "rpcpassword=${RPCPASS}" >> /var/lib/smly/smileycoin.conf
 }
-
 EOSH
+chmod +x /usr/local/sbin/smileycoin-setup

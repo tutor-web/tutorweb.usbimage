@@ -137,12 +137,7 @@ dhcp-leasefile=/run/dnsmasq.leases
 address=/.eias.lan/172.16.16.1
 address=/modem.eias.lan/192.168.8.1
 
-address=/captive.apple.com/172.16.16.1
-address=/connectivitycheck.gstatic.com/172.16.16.1
-address=/clients3.google.com/172.16.16.1
-address=/detectportal.firefox.com/172.16.16.1
-
-conf-dir=/var/local/etc/dnsmasq.d
+conf-dir=/var/run/dnsmasq.d
 EOF
 
 mkdir -p /etc/hostapd ; cat <<'EOF' > /etc/hostapd/hostapd.conf
@@ -243,14 +238,40 @@ cat <<'EOF' > /etc/default/hostapd
 DAEMON_CONF="/etc/hostapd/hostapd.conf"
 EOF
 
+ln -s /run/hostname /etc/hostname
+ln -s /run/mailname /etc/mailname
 
-cat <<'EOSH' >> /usr/local/sbin/sethost
+cat <<'EOSH' > /usr/local/sbin/sethost
+#!/bin/sh
+
+##### Hostname
+HOSTID="000000"
+[ -f /sys/class/net/int0/address ] && HOSTID="$(/bin/sed 's/://g ; s/^.\{6\}//' /sys/class/net/int0/address)"
+/bin/hostname twbox-$HOSTID
+/bin/hostname > /run/hostname
+echo "twbox-${HOSTID}.tutor-web.net" > /run/mailname
 
 ##### DNSMasq
-mkdir -p /var/local/etc/dnsmasq.d
-cat <<EOF > /var/local/etc/dnsmasq.d/hosts
+mkdir -p /var/run/dnsmasq.d/
+cat <<EOF > /var/run/dnsmasq.d/localnames
 cname=twbox-${HOSTID},eias.lan
 cname=twbox-${HOSTID}.tutor-web.net,eias.lan
 EOF
-
 EOSH
+chmod a+x /usr/local/sbin/sethost
+
+cat <<'EOF' > /etc/systemd/system/sethost.service
+[Unit]
+Description=Configure hostname
+DefaultDependencies=no
+After=network.target
+Before=network-online.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/sbin/sethost
+
+[Install]
+WantedBy=network-online.target
+EOF
+systemctl enable sethost.service

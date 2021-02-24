@@ -54,25 +54,6 @@ cat <<'EOF' > /etc/systemd/logind.conf
 HandlePowerKey=poweroff
 EOF
 
-cat <<'EOF' > /etc/systemd/system/sethost.service
-[Unit]
-Description=Setup host
-DefaultDependencies=no
-After=sysinit.target local-fs.target
-Before=basic.target
-
-[Service]
-Type=oneshot
-ExecStart=/usr/local/sbin/sethost
-StandardOutput=syslog+console
-StandardError=syslog+console
-
-[Install]
-WantedBy=basic.target
-EOF
-mkdir -p /etc/systemd/system/basic.target.wants
-systemctl enable sethost
-
 sed -i 's/main$/main contrib non-free/' /etc/apt/sources.list
 cat <<'EOF' > /etc/apt/sources.list.d/backports.list
 deb http://deb.debian.org/debian buster-backports main
@@ -91,41 +72,38 @@ apt-get install -y dbus
 # util
 apt-get install -y nano vim ne less screen usbutils curl wget ssl-cert strace netcat-traditional e2fsprogs
 
+mkdir /twdata
 
-cat <<'EOSH' >> /usr/local/sbin/sethost
+cat <<'EOSH' > /usr/local/sbin/twmounts
 #!/bin/sh -e
-HOSTID="000000"
-[ -f /sys/class/net/int0/address ] && HOSTID="$(/bin/sed 's/://g ; s/^.\{6\}//' /sys/class/net/int0/address)"
-
-# Mount /var/local, or if it's not there then use a tmpfs
-mountpoint -q /var/local || for f in `seq 1 30`; do
-    mount /dev/disk/by-label/twdata /var/local && break
+# Mount /twdata, or if it's not there then use a tmpfs
+mountpoint -q /twdata || for f in `seq 1 30`; do
+    mount /dev/disk/by-label/twdata /twdata && break
     sleep 1
 done
-mountpoint -q /var/local || mount -t tmpfs tmpfs /var/local
+mountpoint -q /twdata || mount -t tmpfs tmpfs /twdata
 
-mkdir -p /var/local/etc
-/bin/hostname twbox-$HOSTID
-/bin/hostname > /var/local/etc/hostname
-echo "twbox-${HOSTID}.tutor-web.net" > /var/local/etc/mailname
-
-##### Systemd bodges
-for dir in \
-        /var/lib/systemd \
-        /var/lib/container \
-        /var/lib/dhcp \
-        /var/cache \
-        /var/log \
-    ; do
-    mkdir -p /var/local${dir}
-done
-
-##### nullmailer
-mount -t tmpfs tmpfs /var/spool/nullmailer
-mkdir -p /var/spool/nullmailer/queue
-mkdir -p /var/spool/nullmailer/tmp
-mkfifo /var/spool/nullmailer/trigger
-chown mail:root /var/spool/nullmailer/*
-
+# Overlay FS for /var
+mkdir -p /twdata/var_work ; mkdir -p /twdata/var
+mount -t overlay -o lowerdir=/var,upperdir=/twdata/var,workdir=/twdata/var_work \
+    overlay /var
 EOSH
-chmod +x /usr/local/sbin/sethost
+chmod +x /usr/local/sbin/twmounts
+
+cat <<'EOF' > /etc/systemd/system/twmounts.service
+[Unit]
+Description=Mount TW FS overlays
+DefaultDependencies=no
+Before=local-fs.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/sbin/twmounts
+StandardOutput=syslog+console
+StandardError=syslog+console
+
+[Install]
+WantedBy=local-fs.target
+EOF
+mkdir -p /etc/systemd/system/basic.target.wants
+systemctl enable twmounts
