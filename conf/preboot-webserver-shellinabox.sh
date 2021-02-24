@@ -23,3 +23,25 @@ SHELLINABOX_PORT=4200
 #   Firefox on Linux/x86_64.
 SHELLINABOX_ARGS="--no-beep --localhost-only --disable-ssl"
 EOF
+
+mkdir -p /etc/nginx/sites-available ; cat <<'EOF' > /etc/nginx/sites-available/shell
+upstream shell {
+  server 127.0.0.1:8280;
+}
+
+server {
+  listen [::]:80;
+  listen      80;
+  server_name shell.eias.lan;
+
+  location / {
+    proxy_pass http://shell;
+    proxy_cache off;
+  }
+}
+EOF
+mkdir -p /etc/nginx/sites-enabled ; ln -rs /etc/nginx/sites-available/shell /etc/nginx/sites-enabled/shell
+
+cat <<'EOF' > /etc/dnsmasq.d/shell
+cname=shell.eias.lan,eias.lan
+EOF

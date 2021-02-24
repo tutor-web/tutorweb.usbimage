@@ -13,10 +13,6 @@ awk '
 mv /etc/nginx/nginx.conf.n /etc/nginx/nginx.conf
 
 cat <<'EOF' > /etc/nginx/sites-available/default
-upstream shellinabox {
-  server 127.0.0.1:4200;
-}
-
 server {
     listen 80 default_server;
     listen [::]:80 default_server;
@@ -33,8 +29,7 @@ server {
     }
 
     location /shell/ {
-        proxy_pass http://shellinabox;
-        proxy_cache off;
+        return 301 http://shell.eias.lan;
     }
 }
 EOF
