@@ -12,7 +12,6 @@ virt-builder debian-10 \
     --run conf/preboot-webserver.sh \
     --run conf/preboot-webserver-fakeinternet.sh \
     --run conf/preboot-webserver-shellinabox.sh \
-    --run-command 'ln -fs /etc/resolvconf/run/resolv.conf /etc/resolv.conf' \
     --timezone UTC
 
 # conf/preboot-tutorweb.sh
