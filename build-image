@@ -6,13 +6,13 @@ virt-builder debian-10 \
     --hostname tutorweb-box \
     --root-password password:tuttuttut \
     --arch amd64 \
+    --timezone UTC \
     --copy-in 'conf/overlay-webserver/srv:/' \
     --run conf/preboot-base.sh \
     --run conf/preboot-network.sh \
     --run conf/preboot-webserver.sh \
     --run conf/preboot-webserver-fakeinternet.sh \
     --run conf/preboot-webserver-shellinabox.sh \
-    --timezone UTC
 
 # conf/preboot-tutorweb.sh
 
