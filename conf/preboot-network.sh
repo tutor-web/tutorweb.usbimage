@@ -63,6 +63,8 @@ esac
 EOF
 chmod a+x /etc/network/mapping.sh
 
+echo "br_netfilter" >> /etc/modules
+
 cat <<'EOF' > /etc/network/iptables.up.rules
 *filter
 
