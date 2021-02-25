@@ -29,12 +29,21 @@ server {
         fastcgi_param SCRIPT_FILENAME  /srv/eias.lan/$fastcgi_script_name;
     }
 
+    location /twdumps/ {
+        autoindex on;
+        autoindex_exact_size off;
+        autoindex_format html;
+        autoindex_localtime on;
+    }
+
     location /shell/ {
         return 301 http://shell.eias.lan;
     }
 }
 EOF
 ln -frs /etc/nginx/sites-available/default /etc/nginx/sites-enabled/default
+
+ln -fs /var/local/tutorweb/local-dumps /srv/eias.lan/www/twdumps
 
 cat <<EOF > /etc/nginx/conf.d/proxy_cache.conf
 proxy_cache off;
