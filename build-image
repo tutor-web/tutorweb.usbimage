@@ -13,6 +13,7 @@ virt-builder debian-10 \
     --run conf/preboot-webserver.sh \
     --run conf/preboot-webserver-fakeinternet.sh \
     --run conf/preboot-webserver-shellinabox.sh \
+    --no-logfile
 
 # conf/preboot-tutorweb.sh
 
