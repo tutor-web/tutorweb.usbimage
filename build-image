@@ -16,8 +16,9 @@ virt-builder debian-10 \
     --run conf/preboot-webserver-shellinabox.sh \
     --run conf/preboot-kiwix.sh \
     --no-logfile
-
-# conf/preboot-tutorweb.sh
+#    --run conf/preboot-kalite.sh \
+#    --run conf/preboot-tutorweb.sh \
+#    --run conf/preboot-smileycoin.sh \
 
 # TODO: 
 #br_chroot adduser --disabled-password --gecos \"\" --uid 1000 --gid 1000 tutor
