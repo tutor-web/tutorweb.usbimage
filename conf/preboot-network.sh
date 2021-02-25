@@ -9,7 +9,7 @@ iface br0 inet static
     netmask 255.255.255.0
     bridge_ports none
     bridge_maxwait 5
-    up /sbin/iptables-restore < /etc/network/iptables.up.rules
+    up /sbin/iptables-legacy-restore < /etc/network/iptables.up.rules
     # NB: "allow-hotplug" won't work for PCI, and don't know the number to use "auto"
     post-up ifup $(ls -1 /sys/class/net | grep -E '^int')
 
