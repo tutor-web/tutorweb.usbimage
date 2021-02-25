@@ -34,9 +34,15 @@ EOF
 cat <<EOSH >> /usr/local/sbin/tutorwebdb
 #!/bin/sh
 
-[ -f /var/lib/mysql/tw_quizdb/db.opt ] && exit 0
+mountpoint -q /srv/tutorweb.buildout/var \
+    || mount --bind /var/local/tutorweb /srv/tutorweb.buildout/var
 
-cat <<EOF | mysql -u root
+mkdir -p /var/local/tutorweb/filestorage
+chown tutorweb /var/local/tutorweb/filestorage
+mkdir -p /var/local/tutorweb/blobstorage
+chown tutorweb /var/local/tutorweb/blobstorage
+
+[ -f /var/lib/mysql/tw_quizdb/db.opt ] || cat <<EOF | mysql -u root
 CREATE DATABASE tw_quizdb;
 CREATE USER 'tw_quizdb'@'localhost' IDENTIFIED BY '${MYSQLTUTPASS}';
 GRANT ALL PRIVILEGES ON tw_quizdb. * TO 'tw_quizdb'@'localhost';
@@ -61,7 +67,7 @@ Type=oneshot
 ExecStart=/usr/local/sbin/tutorwebdb
 
 [Install]
-WantedBy=tutorweb.service
+WantedBy=tutorweb-zeo.service
 EOF
 systemctl enable tutorwebdb
 
@@ -78,13 +84,18 @@ sed '/st_mysql_options options;/a unsigned int reconnect;' /usr/include/mysql/my
 
 git clone git://github.com/tutor-web/tutorweb.buildout /srv/tutorweb.buildout
 
-cat <<EOF > /srv/tutorweb.buildout/buildout.cfg
+cat <<'EOF' > /srv/tutorweb.buildout/buildout.cfg
 [buildout]
 extends = cfgs/production.cfg
 always-checkout = false
 parts +=
     replicate-dump
     replicate-dump-mkdir
+parts -=
+    supervisor
+    supervisor-crontab
+    logrotate-conf
+    logrotate-crontab
 eggs +=
     MySQL-python
 quizdb-url = mysql+mysqldb://tw_quizdb:${passwords:mysql}@localhost/tw_quizdb?charset=utf8
@@ -94,6 +105,9 @@ quizdb-coin-captcha-key = none
 
 [instance]
 user = admin:${passwords:admin}
+EOF
+
+cat <<EOF >> /srv/tutorweb.buildout/buildout.cfg
 
 [passwords]
 admin = ${TWPASS}
@@ -102,10 +116,11 @@ smlyrpc = ${RPCPASS}
 smlywallet = ${WALLETPASS}
 EOF
 
-# Symlink tw's var to the global var
+# Bind-mount /var to global /var/local
 mkdir -p /var/local/tutorweb
-ln -fs /var/local/tutorweb /srv/tutorweb.buildout/var
-chown tutorweb /var/local/tutorweb
+mkdir -p /srv/tutorweb.buildout/var
+mount --bind /var/local/tutorweb /srv/tutorweb.buildout/var
+chown tutorweb /var/local/tutorweb /srv/tutorweb.buildout/var
 
 for f in lib include share bin local eggs src parts develop-eggs; do
     mkdir "/srv/tutorweb.buildout/$f"
@@ -126,28 +141,78 @@ chown tutorweb /srv/tutorweb.buildout
     && sudo -ututorweb ./bin/buildout; )
 
 # TODO: Copy in bootstrap Data.fs
+# /var/local/tutorweb/blobstorage/.layout
+# /var/local/tutorweb/filestorage/Data.fs.index
+# /var/local/tutorweb/filestorage/Data.fs
+# /var/local/tutorweb/filestorage/Data.fs.tmp
+# /var/local/tutorweb/filestorage/Data.fs.lock
 
-cat <<'EOF' > /etc/systemd/system/tutorweb.service
+cat <<'EOF' > /etc/systemd/system/tutorweb-zeo.service
 [Unit]
-Description=Tutor-web
-After=network.target
+Description=Tutorweb ZEO server
 
 [Service]
-ExecStart=/srv/tutorweb.buildout/bin/supervisord
-ExecStop=/srv/tutorweb.buildout/bin/supervisorctl $OPTIONS shutdown
-ExecReload=/srv/tutorweb.buildout/bin/supervisorctl $OPTIONS reload
+Type=simple
+ExecStart=/srv/tutorweb.buildout/bin/zeo fg
+WorkingDirectory=/srv/tutorweb.buildout/bin
 User=tutorweb
-KillMode=process
 Restart=on-failure
-RestartSec=42s
+RestartSec=10s
+
+[Install]
+WantedBy=tutorweb-instance@.service
+EOF
+systemctl enable tutorweb-zeo.service
+
+cat <<'EOF' > /etc/systemd/system/tutorweb-instance@.service
+[Unit]
+Description=Tutorweb instance %I
+
+[Service]
+Type=simple
+ExecStart=/srv/tutorweb.buildout/bin/instance%i console
+WorkingDirectory=/srv/tutorweb.buildout/bin
+User=tutorweb
+Restart=on-failure
+RestartSec=10s
 
 [Install]
 WantedBy=multi-user.target
 EOF
-systemctl enable tutorweb.service
+systemctl enable tutorweb-instance@1.service
+systemctl enable tutorweb-instance@2.service
+systemctl enable tutorweb-instance@3.service
+systemctl enable tutorweb-instance@4.service
 
-cat <<'EOSH' > /usr/local/sbin/tutorweb-setup
-#!/bin/sh -eu
+mkdir -p /etc/nginx/sites-available ; cat <<'EOF' > /etc/nginx/sites-available/tutor-web
+upstream plone {
+  # TODO: nginx doesn't support this yet(need 1.7.2) hash $remote_addr$cookie___ac consistent;
+  ip_hash;
 
-EOSH
-chmod a+x /usr/local/sbin/tutorweb-setup
+  server 127.0.0.1:8181;  # Can be marked as "down"
+  server 127.0.0.1:8182;
+  server 127.0.0.1:8183;
+  server 127.0.0.1:8184;
+}
+
+server {
+  listen [::]:80;
+  listen      80;
+  server_name tutor-web.eias.lan *.tutor-web.net;
+
+  location ~ ^/manage {
+    deny all;
+  }
+
+  # Lets-encrypt
+  location /.well-known/acme-challenge {
+    root /tmp/acme-challenge;
+  }
+
+  location / {
+    proxy_pass http://plone/VirtualHostBase/$scheme/$host:$server_port/tutor-web/VirtualHostRoot$request_uri;
+    proxy_cache off;
+  }
+}
+EOF
+mkdir -p /etc/nginx/sites-enabled ; ln -rs /etc/nginx/sites-available/tutor-web /etc/nginx/sites-enabled/tutor-web
