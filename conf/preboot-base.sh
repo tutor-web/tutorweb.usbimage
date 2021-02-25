@@ -74,7 +74,7 @@ apt-get install -y firmware-linux
 apt-get install -y dbus
 
 # util
-apt-get install -y nano vim ne less screen usbutils curl wget ssl-cert strace netcat-traditional e2fsprogs
+apt-get install -y nano vim ne less screen usbutils curl wget ssl-cert strace netcat-traditional e2fsprogs xterm
 
 mkdir /twdata
 
