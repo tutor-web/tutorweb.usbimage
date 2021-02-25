@@ -8,11 +8,13 @@ virt-builder debian-10 \
     --arch amd64 \
     --timezone UTC \
     --copy-in 'conf/overlay-webserver/srv:/' \
+    --copy-in 'twpreload:/' \
     --run conf/preboot-base.sh \
     --run conf/preboot-network.sh \
     --run conf/preboot-webserver.sh \
     --run conf/preboot-webserver-fakeinternet.sh \
     --run conf/preboot-webserver-shellinabox.sh \
+    --run conf/preboot-kiwix.sh \
     --no-logfile
 
 # conf/preboot-tutorweb.sh
