@@ -1,5 +1,9 @@
 #!/bin/sh -eu
 
+# Generate phonehome key
+mkdir -p twpreload/phonehome
+[ -f twpreload/phonehome/id_rsa ] || ssh-keygen -f twpreload/phonehome/id_rsa -N ""
+
 # NB: preboot-base.sh hard-codes debian backport version
 virt-builder debian-10 \
     --output eias.img --format raw \
@@ -11,6 +15,7 @@ virt-builder debian-10 \
     --copy-in 'twpreload:/' \
     --run conf/preboot-base.sh \
     --run conf/preboot-network.sh \
+    --run conf/preboot-network-phonehome.sh \
     --run conf/preboot-webserver.sh \
     --run conf/preboot-webserver-fakeinternet.sh \
     --run conf/preboot-webserver-shellinabox.sh \
