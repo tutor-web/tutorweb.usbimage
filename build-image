@@ -2,7 +2,7 @@
 
 # NB: preboot-base.sh hard-codes debian backport version
 virt-builder debian-10 \
-    --output eias.img --format raw --size 10G \
+    --output eias.img --format raw \
     --hostname tutorweb-box \
     --root-password password:tuttuttut \
     --arch amd64 \
