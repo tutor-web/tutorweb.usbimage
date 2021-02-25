@@ -258,7 +258,7 @@ ln -fs /run/mailname /etc/mailname
 # https://github.com/libguestfs/libguestfs/commit/9521422ce60578f7196cc8b7977d998159238c19
 # /etc/resolv.conf has been saved ro a randomly-named file at some point, change this
 # so it puts back what we really want.
-RESOLVCONF_BACKUP="$(grep -l nameserver /etc/* 2>/dev/null | grep -vE '/etc/resolv.conf|/etc/services' | head -1)"
+RESOLVCONF_BACKUP="$(grep -l nameserver /etc/* 2>/dev/null | grep -vE '/etc/dnsmasq.conf|/etc/resolv.conf|/etc/services' | head -1)"
 ln -fs /etc/resolvconf/run/resolv.conf "${RESOLVCONF_BACKUP}"
 
 cat <<'EOSH' > /usr/local/sbin/sethost
