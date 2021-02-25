@@ -81,7 +81,7 @@ mkdir /twdata
 cat <<'EOSH' > /usr/local/sbin/twmounts
 #!/bin/sh -e
 # Mount /twdata, or if it's not there then use a tmpfs
-mountpoint -q /twdata || for f in `seq 1 30`; do
+mountpoint -q /twdata || for f in `seq 1 10`; do
     mount /dev/disk/by-label/twdata /twdata && break
     sleep 1
 done
