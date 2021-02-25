@@ -1,5 +1,6 @@
-#!/bin/sh -eu
+#!/bin/sh
 # Run in ~chroot env on image creation
+set -eu
 
 cat <<'EOF' > /etc/dnsmasq.d/fakeinternet
 address=/captive.apple.com/172.16.16.1

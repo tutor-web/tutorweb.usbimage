@@ -1,5 +1,6 @@
-#!/bin/sh -eu
+#!/bin/sh
 # Run in ~chroot env on image creation
+set -eu
 
 cat <<EOF | debconf-set-selections -v
 mysql-server mysql-server/root_password password ""

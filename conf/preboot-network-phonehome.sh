@@ -1,5 +1,6 @@
-#!/bin/sh -eu
+#!/bin/sh
 # Run in ~chroot env on image creation
+set -eu
 
 cat <<'EOSH' >> /usr/local/sbin/phonehome-setup
 #!/bin/sh -eu

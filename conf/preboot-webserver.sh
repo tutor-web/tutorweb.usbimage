@@ -1,5 +1,6 @@
-#!/bin/sh -eu
+#!/bin/sh
 # Run in ~chroot env on image creation
+set -eu
 
 apt-get install -y nginx fcgiwrap
 
@@ -33,7 +34,7 @@ server {
     }
 }
 EOF
-ln -rs /etc/nginx/sites-available/default /etc/nginx/sites-enabled/default
+ln -frs /etc/nginx/sites-available/default /etc/nginx/sites-enabled/default
 
 cat <<EOF > /etc/nginx/conf.d/proxy_cache.conf
 proxy_cache off;

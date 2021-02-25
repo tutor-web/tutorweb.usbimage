@@ -1,5 +1,6 @@
-#!/bin/sh -eu
+#!/bin/sh
 # Run in ~chroot env on image creation
+set -eu
 
 cat <<'EOF' > /etc/apt/apt.conf.d/no-recommends
 APT { Install-Recommends "false"; };

@@ -1,5 +1,6 @@
-#!/bin/sh -eu
+#!/bin/sh
 # Run in ~chroot env on image creation
+set -eu
 
 cat <<'EOF' > /etc/network/interfaces.d/local
 auto br0
@@ -248,8 +249,8 @@ cat <<'EOF' > /etc/default/hostapd
 DAEMON_CONF="/etc/hostapd/hostapd.conf"
 EOF
 
-ln -s /run/hostname /etc/hostname
-ln -s /run/mailname /etc/mailname
+ln -fs /run/hostname /etc/hostname
+ln -fs /run/mailname /etc/mailname
 
 cat <<'EOSH' > /usr/local/sbin/sethost
 #!/bin/sh
