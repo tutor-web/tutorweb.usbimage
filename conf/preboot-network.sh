@@ -3,17 +3,15 @@
 set -eu
 
 cat <<'EOF' > /etc/network/interfaces.d/local
-auto br0
 iface br0 inet static
     address 172.16.16.1
     netmask 255.255.255.0
     bridge_ports none
     bridge_maxwait 5
     up /sbin/iptables-legacy-restore < /etc/network/iptables.up.rules
-    # NB: "allow-hotplug" won't work for PCI, and don't know the number to use "auto"
-    post-up ifup $(ls -1 /sys/class/net | grep -E '^int')
 
 iface net-bridge inet manual
+    pre-up ifup br0
     pre-up ifconfig ${IFACE} 0.0.0.0 up
     post-up brctl addif br0 ${IFACE}
     pre-down brctl delif br0 ${IFACE}
