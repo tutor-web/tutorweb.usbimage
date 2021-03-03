@@ -45,6 +45,9 @@ cat <<'EOF' >> /etc/hosts
 172.16.16.1	eias.lan box.smileyco.in
 EOF
 
+# Remove pre-baked machine ID
+echo "" > /etc/machine-id
+
 cat <<'EOF' > /etc/systemd/journald.conf
 [Journal]
 Storage=volatile
