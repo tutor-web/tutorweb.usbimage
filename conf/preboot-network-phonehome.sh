@@ -2,15 +2,16 @@
 # Run in ~chroot env on image creation
 set -eu
 
-# Populate known_hosts
+# Populate known_hosts, checking we can connect in the process
+chmod a+r /twpreload/phonehome/id_rsa
 mkdir -p /etc/phonehome
 ssh -o UserKnownHostsFile=/etc/phonehome/known_hosts \
+    -i /twpreload/phonehome/id_rsa \
+    -F /twpreload/phonehome/config \
     -o StrictHostKeyChecking=accept-new \
     -o BatchMode=yes \
-    phonehome@phonehome.tutor-web.net \
-    /bin/true || true  # NB: We don't care if we actually connect
+    phonehome /bin/true
 [ -f /etc/phonehome/known_hosts ] || exit 1
-echo "" > /etc/phonehome/config
 
 cat <<'EOF' > /etc/systemd/system/phonehome.service
 [Unit]
@@ -27,9 +28,9 @@ ExecStart=/usr/bin/ssh -NTC \
     -o UserKnownHostsFile=/etc/phonehome/known_hosts \
     -i /twpreload/phonehome/id_rsa \
     -L 9025:localhost:25 \
-    -R /tmp/phonehome-%h:localhost:22 \
-    -F /etc/phonehome/config \
-    phonehome@phonehome.tutor-web.net
+    -R /tmp/phonehome-%H-%m:localhost:22 \
+    -F /twpreload/phonehome/config \
+    phonehome
 
 # Restart every >2 seconds to avoid StartLimitInterval failure
 RestartSec=300

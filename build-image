@@ -3,6 +3,12 @@
 # Generate phonehome key
 mkdir -p twpreload/phonehome
 [ -f twpreload/phonehome/id_rsa ] || ssh-keygen -f twpreload/phonehome/id_rsa -N ""
+[ -f twpreload/phonehome/config ] || cat <<'EOF' > twpreload/phonehome/config
+# Example phonehome config, replace with sensible values
+Host phonehome
+    User phonehome
+    HostName phonehome.net
+EOF
 
 # NB: preboot-base.sh hard-codes debian backport version
 virt-builder debian-10 \
