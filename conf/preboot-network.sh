@@ -283,8 +283,8 @@ cat <<'EOF' > /etc/systemd/system/sethost.service
 [Unit]
 Description=Configure hostname
 DefaultDependencies=no
-After=network.target
-Before=network-online.target
+After=network-online.target
+Wants=network-online.target
 
 [Service]
 Type=oneshot
