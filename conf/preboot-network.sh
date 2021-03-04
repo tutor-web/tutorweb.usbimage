@@ -100,9 +100,18 @@ cat <<'EOF' > /etc/network/iptables.up.rules
 
 :FORWARD DROP [0:0]
 -A INPUT -i lo -j ACCEPT
--A FORWARD -i br0 -j ACCEPT
 -A FORWARD -m state --state RELATED,ESTABLISHED -j ACCEPT
--A FORWARD -p tcp -m tcp --dport ssh -j ACCEPT
+-A FORWARD -i br0 -p tcp -m tcp --dport ssh -j ACCEPT
+-A FORWARD -i br0 -p tcp -m tcp --dport domain -j ACCEPT
+-A FORWARD -i br0 -p udp -m udp --dport domain -j ACCEPT
+EOF
+
+cat /twpreload/twhosts | while read -r HOST; do
+    echo "# ${HOST}" >> /etc/network/iptables.up.rules
+    echo "-A FORWARD -i br0 -d $(getent ahostsv4 ${HOST} | cut -d' ' -f1 | head -1) -j ACCEPT" >> /etc/network/iptables.up.rules
+done
+
+cat <<'EOF' >> /etc/network/iptables.up.rules
 -A FORWARD -j LOG
 -A FORWARD -j DROP
 
