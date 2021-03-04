@@ -147,60 +147,8 @@ resolv-file=/tmp/resolv.upstream.conf
 dhcp-leasefile=/run/dnsmasq.leases
 
 address=/.eias.lan/172.16.16.1
-address=/modem.eias.lan/192.168.8.1
 
 conf-dir=/var/run/dnsmasq.d
-EOF
-
-mkdir -p /etc/hostapd ; cat <<'EOF' > /etc/hostapd/hostapd.conf
-ssid=tutorweb-box
-wpa_passphrase=tutorweb-box
-hw_mode=g
-channel=6
-
-ap_max_inactivity=60
-interface=wlan0
-bridge=br0
-logger_syslog=-1
-logger_syslog_level=2
-logger_stdout=-1
-logger_stdout_level=2
-ctrl_interface=/var/run/hostapd
-ctrl_interface_group=0
-beacon_int=100
-dtim_period=2
-max_num_sta=255
-rts_threshold=2347
-fragm_threshold=2346
-macaddr_acl=0
-auth_algs=3
-ignore_broadcast_ssid=0
-wmm_enabled=1
-wmm_ac_bk_cwmin=4
-wmm_ac_bk_cwmax=10
-wmm_ac_bk_aifs=7
-wmm_ac_bk_txop_limit=0
-wmm_ac_bk_acm=0
-wmm_ac_be_aifs=3
-wmm_ac_be_cwmin=4
-wmm_ac_be_cwmax=10
-wmm_ac_be_txop_limit=0
-wmm_ac_be_acm=0
-wmm_ac_vi_aifs=2
-wmm_ac_vi_cwmin=3
-wmm_ac_vi_cwmax=4
-wmm_ac_vi_txop_limit=94
-wmm_ac_vi_acm=0
-wmm_ac_vo_aifs=2
-wmm_ac_vo_cwmin=2
-wmm_ac_vo_cwmax=3
-wmm_ac_vo_txop_limit=47
-wmm_ac_vo_acm=0
-eapol_key_index_workaround=0
-eap_server=0
-own_ip_addr=127.0.0.1
-wpa=1
-wpa_pairwise=TKIP CCMP
 EOF
 
 cat <<'EOF' > /etc/sysctl.d/local-ipforward.conf
@@ -213,10 +161,6 @@ cat <<'EOF' > /etc/udev/rules.d/70-persistent-net.rules
 # Bridge and loopback get left alone
 SUBSYSTEM=="net", KERNEL=="br*", GOTO="persistent_net_end"
 SUBSYSTEM=="net", KERNEL=="lo", GOTO="persistent_net_end"
-
-# USB modem used for extra access point
-SUBSYSTEM=="net", DRIVERS=="usb", ATTR{address}=="1a:ff:0f:fe:10:22", \
-    NAME="int%n", GOTO="persistent_net_end"
 
 # Internal wifi card
 SUBSYSTEM=="net", DRIVERS=="iwlwifi", NAME="wlan0", GOTO="persistent_net_end"
@@ -236,14 +180,7 @@ cat <<'EOF' > /etc/udev/rules.d/75-persistent-net-generator.rules
 # Disable persistent name generator
 EOF
 
-cat <<'EOF' > /etc/udev/rules.d/modem-modeswitch.rules
-SUBSYSTEMS=="scsi", \
-    ATTRS{model}=="Mass Storage    ", \
-    ATTRS{vendor}=="HUAWEI  ", \
-    RUN += "/usr/sbin/usb_modeswitch -v12d1 -p1f01 -M55534243123456780000000000000a11062000000000000100000000000000"
-EOF
-
-apt-get install -y net-tools ifupdown bridge-utils dnsmasq resolvconf hostapd iw ssh usb-modeswitch iptables iputils-ping isc-dhcp-client rsync
+apt-get install -y net-tools ifupdown bridge-utils dnsmasq resolvconf hostapd iw ssh iptables iputils-ping isc-dhcp-client rsync
 
 cat <<'EOF' > /etc/default/hostapd
 DAEMON_CONF="/etc/hostapd/hostapd.conf"

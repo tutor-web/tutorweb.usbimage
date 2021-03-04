@@ -20,6 +20,8 @@ virt-builder debian-10 \
     --copy-in 'twpreload:/' \
     --run conf/preboot-base.sh \
     --run conf/preboot-network.sh \
+    --run conf/preboot-network-wifiap.sh \
+    --run conf/preboot-network-usbmodem.sh \
     --run conf/preboot-network-phonehome.sh \
     --run conf/preboot-webserver.sh \
     --run conf/preboot-webserver-fakeinternet.sh \
