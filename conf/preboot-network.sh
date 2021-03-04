@@ -291,6 +291,6 @@ Type=oneshot
 ExecStart=/usr/local/sbin/sethost
 
 [Install]
-WantedBy=network-online.target
+WantedBy=network-online.target dnsmasq.service
 EOF
 systemctl enable sethost.service
