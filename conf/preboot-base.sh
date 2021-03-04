@@ -114,3 +114,12 @@ WantedBy=local-fs.target
 EOF
 mkdir -p /etc/systemd/system/basic.target.wants
 systemctl enable twmounts
+
+# Add any users in preload
+cat /twpreload/twadmins | while IFS=: read -r USER PWD; do
+    echo "=== $USER"
+    adduser --disabled-password --gecos "" $USER
+    usermod -a -G sudo $USER
+done
+cat /twpreload/twadmins | chpasswd
+rm /twpreload/twadmins

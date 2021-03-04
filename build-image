@@ -14,7 +14,6 @@ EOF
 virt-builder debian-10 \
     --output eias.img --format raw \
     --hostname tutorweb-box \
-    --root-password password:tuttuttut \
     --arch amd64 \
     --timezone UTC \
     --copy-in 'conf/overlay-webserver/srv:/' \
@@ -30,8 +29,3 @@ virt-builder debian-10 \
 #    --run conf/preboot-kalite.sh \
 #    --run conf/preboot-tutorweb.sh \
 #    --run conf/preboot-smileycoin.sh \
-
-# TODO: 
-#br_chroot adduser --disabled-password --gecos \"\" --uid 1000 --gid 1000 tutor
-#cat ./twpasswd | br_chroot chpasswd
-#br_chroot usermod -a -G sudo tutor
