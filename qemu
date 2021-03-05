@@ -9,7 +9,7 @@ CMD_LINE="${CMD_LINE} -device e1000,netdev=int_net"
 CMD_LINE="${CMD_LINE} -netdev user,id=ext_net"
 CMD_LINE="${CMD_LINE} -device virtio-net,netdev=ext_net"
 
-IMAGE="${1-eias.img}"
+IMAGE="${1-eias.amd64.img}"
 TWDATA_IMAGE="${2-/non/existant}"
 [ -e ${IMAGE} ] && CMD_LINE="${CMD_LINE} -drive format=raw,if=virtio,file=$IMAGE"
 [ -e ${TWDATA_IMAGE} ] && CMD_LINE="${CMD_LINE} -drive format=raw,if=virtio,file=${TWDATA_IMAGE}"

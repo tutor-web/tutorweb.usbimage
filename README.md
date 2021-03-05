@@ -48,7 +48,7 @@ Download [.zim files from here](https://wiki.kiwix.org/wiki/Content_in_all_langu
 
 # Building
 
-Run ``./build-image``. A ``eias.img`` will be created which can be flashed onto a bootable device.
+Run ``./build-image``. A ``eias.amd64.img`` will be created which can be flashed onto a bootable device.
 
 # Emulating
 

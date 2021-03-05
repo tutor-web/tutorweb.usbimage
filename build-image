@@ -10,9 +10,11 @@ Host phonehome
     HostName phonehome.net
 EOF
 
+ARCH=amd64
+
 # NB: preboot-base.sh hard-codes debian backport version
 virt-builder debian-10 \
-    --output eias.img --format raw \
+    --output eias.${ARCH}.img --format raw \
     --hostname tutorweb-box \
     --arch amd64 \
     --timezone UTC \
