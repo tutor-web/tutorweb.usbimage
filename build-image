@@ -13,6 +13,7 @@ EOF
 ARCH=amd64
 
 # NB: preboot-base.sh hard-codes debian backport version
+# NB: Use `#--run ..` to comment out modules
 virt-builder debian-10 \
     --output eias.${ARCH}.img --format raw \
     --hostname tutorweb-box \
@@ -29,7 +30,7 @@ virt-builder debian-10 \
     --run conf/preboot-webserver-fakeinternet.sh \
     --run conf/preboot-webserver-shellinabox.sh \
     --run conf/preboot-kiwix.sh \
+    --run conf/preboot-tutorweb.sh \
+    `#--run conf/preboot-kalite.sh` \
+    `#--run conf/preboot-smileycoin.sh` \
     --no-logfile
-#    --run conf/preboot-kalite.sh \
-#    --run conf/preboot-tutorweb.sh \
-#    --run conf/preboot-smileycoin.sh \
