@@ -45,17 +45,14 @@ EOF
 
 cat <<'EOF' > /etc/network/mapping.sh
 case $1 in
-    lo)
-        echo "lo"
-        ;;
-    br0)
-        echo "br0"
-        ;;
     wwan*)
         echo "net-wwan"
         ;;
-    *)
+    int*)
         echo "net-bridge"
+        ;;
+    *)
+        echo "$1"
         ;;
 esac
 EOF
@@ -189,11 +186,7 @@ cat <<'EOF' > /etc/udev/rules.d/75-persistent-net-generator.rules
 # Disable persistent name generator
 EOF
 
-apt-get install -y net-tools ifupdown bridge-utils dnsmasq resolvconf hostapd iw ssh iptables iputils-ping isc-dhcp-client rsync
-
-cat <<'EOF' > /etc/default/hostapd
-DAEMON_CONF="/etc/hostapd/hostapd.conf"
-EOF
+apt-get install -y net-tools ifupdown bridge-utils dnsmasq resolvconf iw ssh iptables iputils-ping isc-dhcp-client rsync
 
 ln -fs /run/hostname /etc/hostname
 ln -fs /run/mailname /etc/mailname

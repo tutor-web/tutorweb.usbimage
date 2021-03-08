@@ -1,4 +1,6 @@
-mkdir -p /etc/hostapd ; cat <<'EOF' > /etc/hostapd/hostapd.conf
+apt-get install -y hostapd
+
+mkdir -p /etc/hostapd ; cat <<'EOF' > /etc/hostapd/wlan0.conf
 interface=wlan0
 # "g" simply means 2.4GHz band
 hw_mode=g
@@ -23,3 +25,14 @@ rsn_pairwise=CCMP
 ssid=tutorweb-box
 wpa_passphrase=tutorweb-box
 EOF
+
+cat <<'EOF' > /etc/network/interfaces.d/wifiap
+iface wlan0 inet manual
+    up systemctl start hostapd@wlan0.service
+    down systemctl stop hostapd@wlan0.service
+
+allow-hotplug wlan0
+EOF
+
+# Don't use global hostapd, start individual ones when needed
+systemctl disable hostapd
