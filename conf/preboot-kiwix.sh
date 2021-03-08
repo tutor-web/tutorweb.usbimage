@@ -34,6 +34,8 @@ echo "" > /var/tmp/kiwix-library.xml
 ls -1 \
     /twpreload/kiwix/*.zim \
     /twpreload/kiwix/*.zimaa \
+    /twextra/kiwix/*.zim \
+    /twextra/kiwix/*.zimaa \
     /twdata/kiwix/*.zim \
     /twdata/kiwix/*.zimaa \
     | xargs -L1 kiwix-manage /var/tmp/kiwix-library.xml add

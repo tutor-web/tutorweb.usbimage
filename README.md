@@ -44,7 +44,8 @@ An SSH key will be added to the image, and it's public half available at ``twpre
 
 As well as separate partitions, kiwix content files can be baked into the image.
 Download [.zim files from here](https://wiki.kiwix.org/wiki/Content_in_all_languages) and add it to the
-``twpreload/kiwix/`` directory.
+``twpreload/kiwix/`` directory. .zim files can also be added into a ``twextra``
+or ``twdata`` partitions, in a ``kiwix`` directory.
 
 # Building
 
@@ -54,3 +55,15 @@ Run ``./build-image``. A ``eias.amd64.img`` will be created which can be flashed
 
 Run ``./qemu`` to boot an image in a virtual machine.
 
+# Writing to physical media
+
+As well as the main filesystem, the image will also mount any partitions found
+with the following label:
+
+* ``twextra``: Read-only partition for e.g. kiwix content
+* ``twdata``: Read-write partition where tutor-web results are stored.
+
+After writing the image to a disk, you can use unpartitioned space by creating
+an extra partition and using one of the labels above when formatting, e.g:
+
+    mkfs.ext4 -L twdata /dev/sdc2

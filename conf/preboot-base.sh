@@ -80,6 +80,7 @@ apt-get install -y dbus
 apt-get install -y nano vim ne less screen usbutils curl wget ssl-cert strace netcat-traditional e2fsprogs xterm
 
 mkdir /twdata
+mkdir /twextra
 
 cat <<'EOSH' > /usr/local/sbin/twmounts
 #!/bin/sh -e
@@ -89,6 +90,9 @@ mountpoint -q /twdata || for f in `seq 1 10`; do
     sleep 1
 done
 mountpoint -q /twdata || mount -t tmpfs tmpfs /twdata
+
+# Mount /twextra, if there is one
+[ -e /dev/disk/by-label/twextra ] && mount -o ro /dev/disk/by-label/twextra /twextra
 
 # Overlay FS for /var
 mkdir -p /twdata/var_work ; mkdir -p /twdata/var
