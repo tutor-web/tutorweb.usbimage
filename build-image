@@ -13,6 +13,7 @@ EOF
 ARCH=amd64
 
 # NB: preboot-base.sh hard-codes debian backport version
+# NB: /etc/resolv.conf must be replaced outside a --run, since libguestfs replaces it
 # NB: Use `#--run ..` to comment out modules
 virt-builder debian-10 \
     --output eias.${ARCH}.img --format raw \
@@ -23,6 +24,7 @@ virt-builder debian-10 \
     --copy-in 'twpreload:/' \
     --run conf/preboot-base.sh \
     --run conf/preboot-network.sh \
+    --link /etc/resolvconf/run/resolv.conf:/etc/resolv.conf \
     --run conf/preboot-network-wifiap.sh \
     --run conf/preboot-network-usbmodem.sh \
     --run conf/preboot-network-phonehome.sh \
