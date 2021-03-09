@@ -47,13 +47,19 @@ Download [.zim files from here](https://wiki.kiwix.org/wiki/Content_in_all_langu
 ``twpreload/kiwix/`` directory. .zim files can also be added into a ``twextra``
 or ``twdata`` partitions, in a ``kiwix`` directory.
 
+## Tutor-web content
+
+You need to get a tarball of tutorweb content, and place it at ``twpreload/tutorweb.tar.bz2``.
+
 # Building
 
 Run ``./build-image``. A ``eias.amd64.img`` will be created which can be flashed onto a bootable device.
 
 # Emulating
 
-Run ``./qemu`` to boot an image in a virtual machine.
+Run ``sudo ./qemu-setup`` to create network bridge device, then run ``./qemu``
+to boot an image in a virtual machine. Run ``./qemu-host`` to start a LiveCD
+connected to the server.
 
 # Writing to physical media
 

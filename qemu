@@ -1,11 +1,12 @@
 #!/bin/sh -eu
-CMD_LINE="qemu-system-x86_64 -m 2G -machine accel=kvm -usb -device usb-ehci,id=ehci"
+
+CMD_LINE="qemu-system-x86_64 -m 4G -machine accel=kvm -usb -device usb-ehci,id=ehci"
 
 # CMD_LINE="${CMD_LINE} -vga std -monitor stdio"
 CMD_LINE="${CMD_LINE} -nographic -monitor none -serial stdio"
 
-CMD_LINE="${CMD_LINE} -netdev tap,id=int_net,ifname=tap1"
-CMD_LINE="${CMD_LINE} -device e1000,netdev=int_net"
+CMD_LINE="${CMD_LINE} -netdev bridge,br=eiasbr0,id=int_net"
+CMD_LINE="${CMD_LINE} -device e1000,netdev=int_net,mac=DE:AD:BE:EF:01:01"
 CMD_LINE="${CMD_LINE} -netdev user,id=ext_net"
 CMD_LINE="${CMD_LINE} -device virtio-net,netdev=ext_net"
 

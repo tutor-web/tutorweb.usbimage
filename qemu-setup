@@ -1,0 +1,7 @@
+#!/bin/sh -eu
+
+ip link add eiasbr0 type bridge
+ip link set eiasbr0 up
+mkdir -p /etc/qemu
+grep -q 'allow eiasbr0' /etc/qemu/bridge.conf || echo 'allow eiasbr0' >> /etc/qemu/bridge.conf
+chmod u+s /usr/lib/qemu/qemu-bridge-helper

@@ -61,6 +61,7 @@ chmod 700 /usr/local/sbin/tutorwebdb
 cat <<'EOF' > /etc/systemd/system/tutorwebdb.service
 [Unit]
 Description=Create tutor-web DB if missing
+After=mysql.service
 
 [Service]
 Type=oneshot
@@ -120,7 +121,12 @@ EOF
 mkdir -p /var/local/tutorweb
 mkdir -p /srv/tutorweb.buildout/var
 mount --bind /var/local/tutorweb /srv/tutorweb.buildout/var
-chown tutorweb /var/local/tutorweb /srv/tutorweb.buildout/var
+
+[ -f /twpreload/tutorweb.tar.bz2 ] && {
+    tar -jxf /twpreload/tutorweb.tar.bz2 -C /var/local/tutorweb/
+    rm /twpreload/tutorweb.tar.bz2
+}
+chown -R tutorweb /var/local/tutorweb /srv/tutorweb.buildout/var
 
 for f in lib include share bin local eggs src parts develop-eggs; do
     mkdir "/srv/tutorweb.buildout/$f"
@@ -140,12 +146,8 @@ chown tutorweb /srv/tutorweb.buildout
     && sudo -ututorweb ./bin/pip install -r requirements.txt \
     && sudo -ututorweb ./bin/buildout; )
 
-# TODO: Copy in bootstrap Data.fs
-# /var/local/tutorweb/blobstorage/.layout
-# /var/local/tutorweb/filestorage/Data.fs.index
-# /var/local/tutorweb/filestorage/Data.fs
-# /var/local/tutorweb/filestorage/Data.fs.tmp
-# /var/local/tutorweb/filestorage/Data.fs.lock
+# Remove references to geogebra, which won't work
+sed -i '/cdn.geogebra.org/d' src/tutorweb.quiz/tutorweb/quiz/resources/*.html
 
 cat <<'EOF' > /etc/systemd/system/tutorweb-zeo.service
 [Unit]
