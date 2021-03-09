@@ -58,6 +58,10 @@ cat <<'EOF' > /etc/systemd/logind.conf
 HandlePowerKey=poweroff
 EOF
 
+cat <<'EOF' > /etc/sysctl.d/quiet-kernel.conf
+kernel.printk = 2 4 1 7
+EOF
+
 sed -i 's/main$/main contrib non-free/' /etc/apt/sources.list
 cat <<'EOF' > /etc/apt/sources.list.d/backports.list
 deb http://deb.debian.org/debian buster-backports main
