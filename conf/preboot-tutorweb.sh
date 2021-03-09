@@ -104,8 +104,14 @@ quizdb-coin-pass = ${passwords:smlyrpc}
 quizdb-coin-walletpass = ${passwords:smlywallet}
 quizdb-coin-captcha-key = none
 
+[zeo]
+zeo-log-custom = 
+
 [instance]
 user = admin:${passwords:admin}
+event-log = disable
+access-log = disable
+z2-log = disable
 EOF
 
 cat <<EOF >> /srv/tutorweb.buildout/buildout.cfg
@@ -172,7 +178,7 @@ Description=Tutorweb instance %I
 
 [Service]
 Type=simple
-ExecStart=/srv/tutorweb.buildout/bin/instance%i console
+ExecStart=/srv/tutorweb.buildout/bin/instance%i fg
 WorkingDirectory=/srv/tutorweb.buildout/bin
 User=tutorweb
 Restart=on-failure
