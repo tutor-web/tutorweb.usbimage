@@ -51,6 +51,10 @@ or ``twdata`` partitions, in a ``kiwix`` directory.
 
 You need to get a tarball of tutorweb content, and place it at ``twpreload/tutorweb.tar.bz2``.
 
+On first start you also need to run sync_all to populate the database, e.g:
+
+    sudo -ututorweb /srv/tutorweb.buildout/bin/sync_all
+
 # Building
 
 Run ``./build-image``. A ``eias.amd64.img`` will be created which can be flashed onto a bootable device.
