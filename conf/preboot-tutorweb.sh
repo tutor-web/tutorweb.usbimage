@@ -147,7 +147,7 @@ chown tutorweb /srv/tutorweb.buildout
     && sudo -ututorweb ./bin/buildout; )
 
 # Remove references to geogebra, which won't work
-sed -i '/cdn.geogebra.org/d' src/tutorweb.quiz/tutorweb/quiz/resources/*.html
+sed -i '/cdn.geogebra.org/d' /srv/tutorweb.buildout/src/tutorweb.quiz/tutorweb/quiz/resources/*.html
 
 cat <<'EOF' > /etc/systemd/system/tutorweb-zeo.service
 [Unit]
