@@ -42,11 +42,17 @@ chown tutorweb /var/local/tutorweb/filestorage
 mkdir -p /var/local/tutorweb/blobstorage
 chown tutorweb /var/local/tutorweb/blobstorage
 
-[ -f /var/lib/mysql/tw_quizdb/db.opt ] || cat <<EOF | mysql -u root
+if [ -f /var/lib/mysql/tw_quizdb/db.opt ]; then
+    cat <<EOF | mysql -u root
+ALTER USER 'tw_quizdb'@'localhost' IDENTIFIED BY '${MYSQLTUTPASS}';
+EOF
+else
+    cat <<EOF | mysql -u root
 CREATE DATABASE tw_quizdb;
 CREATE USER 'tw_quizdb'@'localhost' IDENTIFIED BY '${MYSQLTUTPASS}';
 GRANT ALL PRIVILEGES ON tw_quizdb. * TO 'tw_quizdb'@'localhost';
 EOF
+fi
 
 # TODO: mysql_secure_installation ? 
 # cat <<EOF | mysql -u root -p
