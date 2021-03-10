@@ -1,4 +1,4 @@
-apt-get install -y hostapd
+apt-get install -y wireless-tools hostapd firmware-iwlwifi
 
 mkdir -p /etc/hostapd ; cat <<'EOF' > /etc/hostapd/wlan0.conf
 interface=wlan0
