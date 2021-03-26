@@ -33,6 +33,6 @@ virt-builder debian-10 \
     --run conf/preboot-webserver-shellinabox.sh \
     --run conf/preboot-kiwix.sh \
     --run conf/preboot-tutorweb.sh \
-    `#--run conf/preboot-kalite.sh` \
+    --run conf/preboot-kolibri.sh \
     `#--run conf/preboot-smileycoin.sh` \
     --no-logfile
