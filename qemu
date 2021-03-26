@@ -10,10 +10,12 @@ CMD_LINE="${CMD_LINE} -device e1000,netdev=int_net,mac=DE:AD:BE:EF:01:01"
 CMD_LINE="${CMD_LINE} -netdev user,id=ext_net"
 CMD_LINE="${CMD_LINE} -device virtio-net,netdev=ext_net"
 
+# qemu-img create -f qcow2 eias.twdata.qcow2 10G
+# mkfs.ext4 -L twdata /dev/vdb
 IMAGE="${1-eias.amd64.img}"
-TWDATA_IMAGE="${2-/non/existant}"
+TWDATA_IMAGE="${2-eias.twdata.qcow2}"
 [ -e ${IMAGE} ] && CMD_LINE="${CMD_LINE} -drive format=raw,if=virtio,file=$IMAGE"
-[ -e ${TWDATA_IMAGE} ] && CMD_LINE="${CMD_LINE} -drive format=raw,if=virtio,file=${TWDATA_IMAGE}"
+[ -e ${TWDATA_IMAGE} ] && CMD_LINE="${CMD_LINE} -drive format=qcow2,if=virtio,file=${TWDATA_IMAGE}"
 
 # Save current terminal settings (for restoring later)
 # https://fragdev.com/blog/using-qemu-inside-terminal-serial-output
