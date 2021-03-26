@@ -92,10 +92,11 @@ mkdir /twdata
 mkdir /twextra
 
 cat <<'EOSH' > /usr/local/sbin/twmounts
-#!/bin/sh -e
+#!/bin/sh
 # Mount /twdata, or if it's not there then use a tmpfs
 mountpoint -q /twdata || for f in `seq 1 10`; do
-    mount /dev/disk/by-label/twdata /twdata && break
+    [ -e /dev/disk/by-label/twdata ] && fsck -y /dev/disk/by-label/twdata
+    [ -e /dev/disk/by-label/twdata ] && mount /dev/disk/by-label/twdata /twdata && break
     sleep 1
 done
 mountpoint -q /twdata || mount -t tmpfs tmpfs /twdata
