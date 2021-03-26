@@ -77,7 +77,7 @@ apt-get update
 apt-get purge -y rsyslog
 
 # admin
-apt-get install -y sudo locales dialog nullmailer apt-utils cron logrotate elinks links2
+apt-get install -y sudo locales dialog nullmailer apt-utils cron logrotate
 
 # firmware
 apt-get install -y firmware-linux
@@ -86,7 +86,7 @@ apt-get install -y firmware-linux
 apt-get install -y dbus
 
 # util
-apt-get install -y nano vim ne less screen usbutils curl wget ssl-cert strace netcat-traditional e2fsprogs xterm
+apt-get install -y nano vim ne less screen usbutils curl wget ssl-cert strace netcat-traditional e2fsprogs xterm elinks
 
 mkdir /twdata
 mkdir /twextra
