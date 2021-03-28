@@ -19,26 +19,7 @@ iface net-bridge inet manual
 
 iface net-wwan inet dhcp
 
-allow-hotplug wwan0
-allow-hotplug wwan1
-allow-hotplug wwan2
-allow-hotplug wwan3
-allow-hotplug wwan4
-allow-hotplug wwan5
-allow-hotplug wwan6
-allow-hotplug wwan7
-allow-hotplug wwan8
-allow-hotplug wwan9
-allow-hotplug int0
-allow-hotplug int1
-allow-hotplug int2
-allow-hotplug int3
-allow-hotplug int4
-allow-hotplug int5
-allow-hotplug int6
-allow-hotplug int7
-allow-hotplug int8
-allow-hotplug int9
+allow-hotplug /*
 mapping *
     script /etc/network/mapping.sh
 EOF
@@ -48,7 +29,7 @@ case $1 in
     wwan*)
         echo "net-wwan"
         ;;
-    int*)
+    int*|enp*|eth*)
         echo "net-bridge"
         ;;
     *)
@@ -168,14 +149,11 @@ cat <<'EOF' > /etc/udev/rules.d/70-persistent-net.rules
 SUBSYSTEM=="net", KERNEL=="br*", GOTO="persistent_net_end"
 SUBSYSTEM=="net", KERNEL=="lo", GOTO="persistent_net_end"
 
-# Internal wifi card
-SUBSYSTEM=="net", DRIVERS=="iwlwifi", NAME="wlan0", GOTO="persistent_net_end"
-
 # USB devices are consided external access
-SUBSYSTEM=="net", ACTION=="add", DRIVERS=="usb", NAME="wwan%n", GOTO="persistent_net_end"
+SUBSYSTEM=="net", ACTION=="add", DRIVERS=="usb", NAME="wwan-%k", GOTO="persistent_net_end"
 
 # virtio devices are external, for development
-SUBSYSTEM=="net", ACTION=="add", SUBSYSTEMS=="virtio", NAME="wwan%n", GOTO="persistent_net_end"
+SUBSYSTEM=="net", ACTION=="add", SUBSYSTEMS=="virtio", NAME="wwan-%k", GOTO="persistent_net_end"
 
 # Anything else internal, and connects to bridge
 SUBSYSTEM=="net", ACTION=="add", NAME="int%n", GOTO="persistent_net_end"
@@ -195,7 +173,7 @@ cat <<'EOSH' > /usr/local/sbin/sethost
 #!/bin/sh
 
 ##### Hostname
-ADDR_FILE="$(ls -1 /sys/class/net/int*/address | head -1)"
+ADDR_FILE="$(ls -1 /sys/class/net/int*/address /sys/class/net/enp*/address | head -1)"
 HOSTID="000000"
 [ -f "${ADDR_FILE}" ] && HOSTID="$(/bin/sed 's/://g ; s/^.\{6\}//' "${ADDR_FILE}")"
 /bin/hostname twbox-$HOSTID
