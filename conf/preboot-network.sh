@@ -32,6 +32,10 @@ case $1 in
     int*|enp*|eth*)
         echo "net-bridge"
         ;;
+    wlp*)
+        # NB: See preboot-network-wifiap.sh
+        echo "net-wifiap"
+        ;;
     *)
         echo "$1"
         ;;

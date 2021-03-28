@@ -1,7 +1,8 @@
-apt-get install -y wireless-tools hostapd firmware-iwlwifi
+apt-get install -y wireless-tools hostapd firmware-iwlwifi firmware-atheros
 
-mkdir -p /etc/hostapd ; cat <<'EOF' > /etc/hostapd/wlan0.conf
+mkdir -p /etc/hostapd ; cat <<'EOF' > /etc/hostapd/default.conf
 interface=wlan0
+bridge=br0
 # "g" simply means 2.4GHz band
 hw_mode=g
 # the channel to use
@@ -27,11 +28,12 @@ wpa_passphrase=tutorweb-box
 EOF
 
 cat <<'EOF' > /etc/network/interfaces.d/wifiap
-iface wlan0 inet manual
-    up systemctl start hostapd@wlan0.service
-    down systemctl stop hostapd@wlan0.service
-
-allow-hotplug wlan0
+# Assigned in /etc/network/mapping.sh
+iface net-wifiap inet manual
+    pre-up sed "s/wlan0/${IFACE}/" /etc/hostapd/default.conf > /run/hostapd.conf
+    # See /usr/share/doc/hostapd/README.Debian
+    # NB: Envvar substitution won't work here, so hope there's no race conditions
+    hostapd /run/hostapd.conf
 EOF
 
 # Don't use global hostapd, start individual ones when needed
