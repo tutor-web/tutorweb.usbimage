@@ -190,6 +190,8 @@ cat <<EOF > /var/run/dnsmasq.d/localnames
 cname=twbox-${HOSTID},eias.lan
 cname=twbox-${HOSTID}.tutor-web.net,eias.lan
 EOF
+
+beep -f 2217.46 -l 50 # C#7
 EOSH
 chmod a+x /usr/local/sbin/sethost
 

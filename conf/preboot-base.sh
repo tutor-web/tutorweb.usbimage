@@ -77,7 +77,7 @@ apt-get update
 apt-get purge -y rsyslog
 
 # admin
-apt-get install -y sudo locales dialog nullmailer apt-utils cron logrotate
+apt-get install -y sudo locales dialog nullmailer apt-utils cron logrotate beep
 
 # firmware
 apt-get install -y firmware-linux
@@ -93,13 +93,21 @@ mkdir /twextra
 
 cat <<'EOSH' > /usr/local/sbin/twmounts
 #!/bin/sh
+# Load pcspkr early, so we can beep: https://pages.mtu.edu/~suits/notefreqs.html
+modprobe pcspkr || true
+
 # Mount /twdata, or if it's not there then use a tmpfs
 mountpoint -q /twdata || for f in `seq 1 10`; do
+    beep -f 523.25 -l 50  # C5
     [ -e /dev/disk/by-label/twdata ] && fsck -y /dev/disk/by-label/twdata
     [ -e /dev/disk/by-label/twdata ] && mount /dev/disk/by-label/twdata /twdata && break
     sleep 1
 done
-mountpoint -q /twdata || mount -t tmpfs tmpfs /twdata
+mountpoint -q /twdata || {
+    beep -f 261.63 -l 50  # C4
+    mount -t tmpfs tmpfs /twdata
+}
+beep -f 1046.50 -l 50  # C6
 
 # Mount /twextra, if there is one
 [ -e /dev/disk/by-label/twextra ] && mount -o ro /dev/disk/by-label/twextra /twextra
@@ -108,6 +116,7 @@ mountpoint -q /twdata || mount -t tmpfs tmpfs /twdata
 mkdir -p /twdata/var_work ; mkdir -p /twdata/var
 mount -t overlay -o lowerdir=/var,upperdir=/twdata/var,workdir=/twdata/var_work \
     overlay /var
+beep -f 2093.00 -l 50  # C7
 EOSH
 chmod +x /usr/local/sbin/twmounts
 

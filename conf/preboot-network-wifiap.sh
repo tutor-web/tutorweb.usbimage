@@ -34,6 +34,7 @@ iface net-wifiap inet manual
     # See /usr/share/doc/hostapd/README.Debian
     # NB: Envvar substitution won't work here, so hope there's no race conditions
     hostapd /run/hostapd.conf
+    post-up beep -f 2637.02 -l 50  # E7
 EOF
 
 # Don't use global hostapd, start individual ones when needed
