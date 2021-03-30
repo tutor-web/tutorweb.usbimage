@@ -94,7 +94,6 @@ cat /twpreload/twhosts | while read -r HOST; do
 done
 
 cat <<'EOF' >> /etc/network/iptables.up.rules
--A FORWARD -j LOG
 -A FORWARD -j DROP
 
 :OUTPUT ACCEPT [0:0]
