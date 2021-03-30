@@ -25,6 +25,7 @@ Type=simple
 ExecStart=/usr/bin/ssh -NTC \
     -o ServerAliveInterval=60 \
     -o ExitOnForwardFailure=yes \
+    -o StreamLocalBindUnlink=yes \
     -o UserKnownHostsFile=/etc/phonehome/known_hosts \
     -i /twpreload/phonehome/id_rsa \
     -L 9025:localhost:25 \
