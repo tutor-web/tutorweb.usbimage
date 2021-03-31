@@ -7,7 +7,7 @@ CMD_LINE="${CMD_LINE} -nographic -monitor none -serial stdio"
 
 CMD_LINE="${CMD_LINE} -netdev bridge,br=eiasbr0,id=int_net"
 CMD_LINE="${CMD_LINE} -device e1000,netdev=int_net,mac=DE:AD:BE:EF:01:01"
-CMD_LINE="${CMD_LINE} -netdev user,id=ext_net"
+CMD_LINE="${CMD_LINE} -netdev user,id=ext_net,hostfwd=tcp::10022-:22"
 CMD_LINE="${CMD_LINE} -device virtio-net,netdev=ext_net"
 
 # qemu-img create -f qcow2 eias.twdata.qcow2 10G

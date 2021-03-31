@@ -65,6 +65,8 @@ Run ``sudo ./qemu-setup`` to create network bridge device, then run ``./qemu``
 to boot an image in a virtual machine. Run ``./qemu-host`` to start a LiveCD
 connected to the server.
 
+You can SSH to the VM with ``ssh -p10022 tutor@localhost``.
+
 # Writing to physical media
 
 As well as the main filesystem, the image will also mount any partitions found
