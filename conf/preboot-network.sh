@@ -196,16 +196,15 @@ chmod a+x /usr/local/sbin/sethost
 
 cat <<'EOF' > /etc/systemd/system/sethost.service
 [Unit]
-Description=Configure hostname
+Description=Configure hostname from MAC
 DefaultDependencies=no
-After=network-online.target
-Wants=network-online.target
+After=networking.service
 
 [Service]
 Type=oneshot
 ExecStart=/usr/local/sbin/sethost
 
 [Install]
-WantedBy=network-online.target dnsmasq.service
+WantedBy=network.target
 EOF
 systemctl enable sethost.service

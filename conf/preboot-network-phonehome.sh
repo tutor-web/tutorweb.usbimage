@@ -18,6 +18,7 @@ cat <<'EOF' > /etc/systemd/system/phonehome.service
 Description=Phone Home Reverse SSH Service
 ConditionPathExists=|/usr/bin
 After=network.target
+Requires=sethost.service
 
 [Service]
 User=nobody
