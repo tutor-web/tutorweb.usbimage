@@ -34,3 +34,9 @@ server {
 }
 EOF
 mkdir -p /etc/nginx/sites-enabled ; ln -rs /etc/nginx/sites-available/kolibri /etc/nginx/sites-enabled/kolibri
+
+cat <<EOF >> /srv/eias.lan/www/index.html
+<div class="links">
+  <a href="http://kolibri.eias.lan">Kolibri (Khan academy)</a>
+</div>
+EOF

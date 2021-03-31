@@ -57,3 +57,9 @@ DynamicUser=yes
 WantedBy=multi-user.target
 EOF
 systemctl enable kiwix
+
+cat <<EOF >> /srv/eias.lan/www/index.html
+<div class="links">
+  <a href="http://kiwix.eias.lan">Kiwix content (Wikipedia, Gutenberg Library, ...)</a>
+</div>
+EOF

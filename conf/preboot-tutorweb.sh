@@ -223,6 +223,15 @@ server {
     root /tmp/acme-challenge;
   }
 
+  location /local-dumps {
+      root /var/local/tutorweb;
+
+      autoindex on;
+      autoindex_exact_size off;
+      autoindex_format html;
+      autoindex_localtime on;
+  }
+
   location / {
     proxy_pass http://plone/VirtualHostBase/$scheme/$host:$server_port/tutor-web/VirtualHostRoot$request_uri;
     proxy_cache off;
@@ -230,3 +239,14 @@ server {
 }
 EOF
 mkdir -p /etc/nginx/sites-enabled ; ln -rs /etc/nginx/sites-available/tutor-web /etc/nginx/sites-enabled/tutor-web
+
+cat <<EOF >> /srv/eias.lan/www/index.html
+<div class="links">
+  <a href="http://tutor-web.eias.lan/++resource++tutorweb.quiz/start.html">Continue your Tutor-Web tutorials</a>
+  <a href="http://tutor-web.eias.lan">Find other Tutor-web content</a>
+</div>
+EOF
+
+cat <<EOF >> /srv/eias.lan/www/status/index.html
+  <a href="http://tutor-web.eias.lan/local-dumps/">Get tutor-web dump files</a>
+EOF

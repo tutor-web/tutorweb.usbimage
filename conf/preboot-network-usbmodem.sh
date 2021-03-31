@@ -10,3 +10,7 @@ EOF
 mkdir -p /etc/dnsmasq.d ; cat <<'EOF' > /etc/dnsmasq.d/usbmodem-config
 address=/modem.eias.lan/192.168.8.1
 EOF
+
+cat <<EOF >> /srv/eias.lan/www/status/index.html
+  <a href="http://modem.eias.lan">Modem web interface</a>
+EOF

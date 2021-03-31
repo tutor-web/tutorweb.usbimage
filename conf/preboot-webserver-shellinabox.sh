@@ -46,3 +46,7 @@ mkdir -p /etc/nginx/sites-enabled ; ln -rs /etc/nginx/sites-available/shell /etc
 cat <<'EOF' > /etc/dnsmasq.d/shell
 cname=shell.eias.lan,eias.lan
 EOF
+
+cat <<EOF >> /srv/eias.lan/www/status/index.html
+  <a href="http://shell.eias.lan">System shell</a>
+EOF
