@@ -98,7 +98,7 @@ an extra partition and using one of the labels above when formatting, e.g:
   * 2x https://linitx.com/product/pc-engines-ipex-to-sma-female-pigtail-cable/14978
   * 2x https://linitx.com/product/pc-engines-omni-antenna-2.4ghz-5ghz-dualband---5dbi/11589
 * 3g hardware:
-  * "Huawei ME906s"
+  * "Huawei ME906s" or "Sierra Wireless mc7455" or "Sierra Wireless em7565"
   * "M.2 Key B to Mini PCIE PCI-E Adapter Converter for 3G/4G/5G"
   * 2x "Sma Female Bulkhead To U.Fl (Ipex/Ipx) MHF-4"
   * 2x https://linitx.com/product/sequoia-delta-6a-3g-sma-antenna/14435
