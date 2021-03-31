@@ -29,7 +29,7 @@ case $1 in
     wwan*)
         echo "net-wwan"
         ;;
-    int*|enp*|eth*)
+    ens*|enp*|eth*)
         echo "net-bridge"
         ;;
     wlp*)
@@ -148,18 +148,12 @@ net.ipv4.ip_forward=1
 EOF
 
 cat <<'EOF' > /etc/udev/rules.d/70-persistent-net.rules
-# Bridge and loopback get left alone
-SUBSYSTEM=="net", KERNEL=="br*", GOTO="persistent_net_end"
-SUBSYSTEM=="net", KERNEL=="lo", GOTO="persistent_net_end"
-
 # USB devices are consided external access
 SUBSYSTEM=="net", ACTION=="add", DRIVERS=="usb", NAME="wwan-%k", GOTO="persistent_net_end"
 
 # virtio devices are external, for development
 SUBSYSTEM=="net", ACTION=="add", SUBSYSTEMS=="virtio", NAME="wwan-%k", GOTO="persistent_net_end"
 
-# Anything else internal, and connects to bridge
-SUBSYSTEM=="net", ACTION=="add", NAME="int%n", GOTO="persistent_net_end"
 LABEL="persistent_net_end"
 EOF
 
@@ -176,7 +170,7 @@ cat <<'EOSH' > /usr/local/sbin/sethost
 #!/bin/sh
 
 ##### Hostname
-ADDR_FILE="$(ls -1 /sys/class/net/int*/address /sys/class/net/enp*/address | head -1)"
+ADDR_FILE="$(ls -1t /sys/class/net/en*/address | head -1)"
 HOSTID="000000"
 [ -f "${ADDR_FILE}" ] && HOSTID="$(/bin/sed 's/://g ; s/^.\{6\}//' "${ADDR_FILE}")"
 /bin/hostname twbox-$HOSTID
