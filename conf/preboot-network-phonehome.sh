@@ -23,16 +23,16 @@ After=sethost.service
 [Service]
 User=nobody
 Type=simple
-ExecStart=/usr/bin/ssh -NTC \
+ExecStart=/bin/sh -c 'exec /usr/bin/ssh -NTC \
     -o ServerAliveInterval=60 \
     -o ExitOnForwardFailure=yes \
     -o StreamLocalBindUnlink=yes \
     -o UserKnownHostsFile=/etc/phonehome/known_hosts \
     -i /twpreload/phonehome/id_rsa \
     -L 9025:localhost:25 \
-    -R /tmp/phonehome-%H-%m:localhost:22 \
+    -R /tmp/phonehome-$$HOSTNAME-%m:localhost:22 \
     -F /twpreload/phonehome/config \
-    phonehome
+    phonehome'
 
 # Restart every >2 seconds to avoid StartLimitInterval failure
 RestartSec=300
