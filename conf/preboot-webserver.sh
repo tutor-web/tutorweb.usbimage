@@ -74,6 +74,7 @@ div.links > a:active {
 }
 EOF
 
+mkdir -p /srv/eias.lan/www
 cat <<EOF > /srv/eias.lan/www/index.html
 <html>
 <head>
@@ -87,6 +88,7 @@ cat <<EOF > /srv/eias.lan/www/index.html
 EOF
 
 
+mkdir -p /srv/eias.lan/www/status
 cat <<EOF > /srv/eias.lan/www/status/index.html
 <html>
 <head>
@@ -103,6 +105,7 @@ cat <<EOF > /srv/eias.lan/www/status/index.html
 </html>
 EOF
 
+mkdir -p /srv/eias.lan/scripts
 cat <<'EOSH' > /srv/eias.lan/scripts/system-report
 #!/bin/sh
 TERM=dumb
