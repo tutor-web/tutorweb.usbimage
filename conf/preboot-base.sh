@@ -146,3 +146,28 @@ cat /twpreload/twadmins | while IFS=: read -r USER PWD; do
 done
 cat /twpreload/twadmins | chpasswd
 rm /twpreload/twadmins
+
+cat <<'EOSH' > /usr/local/sbin/twleds
+#!/bin/sh
+# Configure LEDs if possible
+set -eu
+
+[ -d '/sys/class/leds/apu2:green:2' ] && echo "disk-activity" > '/sys/class/leds/apu2:green:2/trigger'
+[ -d '/sys/class/leds/apu2:green:3' ] && echo "phy0rx" > '/sys/class/leds/apu2:green:3/trigger'
+exit 0
+EOSH
+chmod a+x /usr/local/sbin/twleds
+
+cat <<'EOF' > /etc/systemd/system/twleds.service
+[Unit]
+Description=Configure APU2 LEDs
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/sbin/twleds
+
+[Install]
+WantedBy=multi-user.target
+EOF
+mkdir -p /etc/systemd/system/basic.target.wants
+systemctl enable twleds
