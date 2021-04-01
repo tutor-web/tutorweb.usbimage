@@ -155,6 +155,9 @@ SUBSYSTEM=="net", ACTION=="add", DRIVERS=="usb", NAME="wwan-%k", GOTO="persisten
 # virtio devices are external, for development
 SUBSYSTEM=="net", ACTION=="add", SUBSYSTEMS=="virtio", NAME="wwan-%k", GOTO="persistent_net_end"
 
+# An APU's 3rd port is WWAN
+SUBSYSTEM=="net", ACTION=="add", DRIVERS=="igb", KERNEL=="enp3s0", NAME="wwan-%k", GOTO="persistent_net_end"
+
 LABEL="persistent_net_end"
 EOF
 
