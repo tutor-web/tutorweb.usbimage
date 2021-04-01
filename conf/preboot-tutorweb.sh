@@ -66,15 +66,16 @@ chmod 700 /usr/local/sbin/tutorwebdb
 
 cat <<'EOF' > /etc/systemd/system/tutorwebdb.service
 [Unit]
-Description=Create tutor-web DB if missing
-After=mysql.service
+Description=Tutor-web: Create DB if missing
+Requires=mysql.service
+Before=tutorweb-zeo.service
 
 [Service]
 Type=oneshot
 ExecStart=/usr/local/sbin/tutorwebdb
 
 [Install]
-WantedBy=tutorweb-zeo.service
+RequiredBy=tutorweb-zeo.service
 EOF
 systemctl enable tutorwebdb
 
@@ -163,7 +164,7 @@ sed -i '/cdn.geogebra.org/d' /srv/tutorweb.buildout/src/tutorweb.quiz/tutorweb/q
 
 cat <<'EOF' > /etc/systemd/system/tutorweb-zeo.service
 [Unit]
-Description=Tutorweb ZEO server
+Description=Tutor-web: ZEO server
 
 [Service]
 Type=simple
@@ -174,13 +175,15 @@ Restart=on-failure
 RestartSec=10s
 
 [Install]
-WantedBy=tutorweb-instance@.service
+WantedBy=multi-user.target
 EOF
 systemctl enable tutorweb-zeo.service
 
 cat <<'EOF' > /etc/systemd/system/tutorweb-instance@.service
 [Unit]
-Description=Tutorweb instance %I
+Description=Tutor-web: Instance %I
+PartOf=tutorweb-zeo.service
+After=tutorweb-zeo.service
 
 [Service]
 Type=simple
@@ -191,7 +194,7 @@ Restart=on-failure
 RestartSec=10s
 
 [Install]
-WantedBy=multi-user.target
+WantedBy=tutorweb-zeo.service
 EOF
 systemctl enable tutorweb-instance@1.service
 systemctl enable tutorweb-instance@2.service
