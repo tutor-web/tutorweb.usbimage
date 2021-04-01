@@ -205,6 +205,6 @@ ExecStart=/usr/local/sbin/sethost
 
 [Install]
 WantedBy=network.target
-WantedBy=dnsmasq.service
+RequiredBy=dnsmasq.service
 EOF
 systemctl enable sethost.service
