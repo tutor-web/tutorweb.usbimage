@@ -26,17 +26,13 @@ SHELLINABOX_ARGS="--no-beep --localhost-only --disable-ssl"
 EOF
 
 mkdir -p /etc/nginx/sites-available ; cat <<'EOF' > /etc/nginx/sites-available/shell
-upstream shell {
-  server 127.0.0.1:8280;
-}
-
 server {
   listen [::]:80;
   listen      80;
   server_name shell.eias.lan;
 
   location / {
-    proxy_pass http://shell;
+    proxy_pass http://127.0.0.1:4200;
     proxy_cache off;
   }
 }
