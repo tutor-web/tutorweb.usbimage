@@ -30,6 +30,7 @@ virt-builder debian-10 \
     --run conf/preboot-webserver-shellinabox.sh \
     --run conf/preboot-network-wifiap.sh \
     --run conf/preboot-network-usbmodem.sh \
+    --run conf/preboot-network-mbimmodem.sh \
     --run conf/preboot-network-phonehome.sh \
     --run conf/preboot-kiwix.sh \
     --run conf/preboot-tutorweb.sh \
