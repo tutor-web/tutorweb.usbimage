@@ -13,10 +13,15 @@ mkdir -p /etc/nginx/sites-available ; cat <<'EOF' > /etc/nginx/sites-available/f
 server {
   listen [::]:80;
   listen      80;
+  listen [::]:443 ssl;
+  listen      443 ssl;
   server_name captive.apple.com;
   server_name connectivitycheck.gstatic.com;
   server_name clients3.google.com;
   server_name detectportal.firefox.com;
+
+  ssl_certificate /etc/ssl/certs/ssl-cert-snakeoil.pem;
+  ssl_certificate_key /etc/ssl/private/ssl-cert-snakeoil.key;
 
   root /srv/eias.lan/www;
 
@@ -31,6 +36,10 @@ server {
   }
 
   location /generate_204 {
+    return 204;
+  }
+
+  location /gen_204 {
     return 204;
   }
 }
