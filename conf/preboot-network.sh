@@ -150,13 +150,13 @@ EOF
 
 cat <<'EOF' > /etc/udev/rules.d/70-persistent-net.rules
 # USB devices are consided external access
-SUBSYSTEM=="net", ACTION=="add", DRIVERS=="usb", NAME="wwan-%k", GOTO="persistent_net_end"
+SUBSYSTEM=="net", ACTION=="add", DRIVERS=="usb", NAME="wwan%k", GOTO="persistent_net_end"
 
 # virtio devices are external, for development
-SUBSYSTEM=="net", ACTION=="add", SUBSYSTEMS=="virtio", NAME="wwan-%k", GOTO="persistent_net_end"
+SUBSYSTEM=="net", ACTION=="add", SUBSYSTEMS=="virtio", NAME="wwan%k", GOTO="persistent_net_end"
 
 # An APU's 3rd port is WWAN
-SUBSYSTEM=="net", ACTION=="add", DRIVERS=="igb", KERNEL=="enp3s0", NAME="wwan-%k", GOTO="persistent_net_end"
+SUBSYSTEM=="net", ACTION=="add", DRIVERS=="igb", KERNEL=="enp3s0", NAME="wwan%k", GOTO="persistent_net_end"
 
 LABEL="persistent_net_end"
 EOF
