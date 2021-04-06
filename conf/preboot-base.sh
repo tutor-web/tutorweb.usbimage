@@ -91,6 +91,9 @@ apt-get install -y nano vim ne less screen usbutils curl wget ssl-cert strace ne
 mkdir /twdata
 mkdir /twextra
 
+ln -fs /var/local/hostname /etc/hostname
+ln -fs /var/local/mailname /etc/mailname
+
 cat <<'EOSH' > /usr/local/sbin/twmounts
 #!/bin/sh
 # Load pcspkr early, so we can beep: https://pages.mtu.edu/~suits/notefreqs.html
@@ -117,6 +120,15 @@ mkdir -p /twdata/var_work ; mkdir -p /twdata/var
 mount -t overlay -o lowerdir=/var,upperdir=/twdata/var,workdir=/twdata/var_work \
     overlay /var
 beep -f 2093.00 -l 50  # C7
+
+[ -f "/var/local/hostname" ] || echo "twbox-$(tr -dc A-Za-z0-9 </dev/urandom | head -c 8)" > /var/local/hostname
+/bin/hostname $(cat /var/local/hostname)
+echo "$(cat /var/local/hostname).tutor-web.net" > /var/local/mailname
+mkdir -p /var/run/dnsmasq.d/
+cat <<EOF > /var/run/dnsmasq.d/localnames
+cname=$(hostname),eias.lan
+cname=$(hostname).tutor-web.net,eias.lan
+EOF
 EOSH
 chmod +x /usr/local/sbin/twmounts
 
