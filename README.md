@@ -94,7 +94,7 @@ an extra partition and using one of the labels above when formatting, e.g:
   * https://linitx.com/product/pc-engines-12v-uk-(3-pin)-adapter-for-the-apu-system-board-and-edgerouter-er-x/14167
   * "256GB mSATA SSD"
   * "6mm momentary push button switch" (to add external power button)
-  * 2x "Adhesive Heatsink, 23 x 23 x 6mm"
+  * 2x https://uk.farnell.com/abl-heatsinks/bga-std-025/heat-sink-bga-standard-22-c-w/dp/2084427
 * Wifi hardware:
   * https://linitx.com/product/compex-wle600vx-minipci-express-802.11-a-b-g-n-ac/14939
   * 2x https://linitx.com/product/pc-engines-ipex-to-sma-female-pigtail-cable/14978
