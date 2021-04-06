@@ -19,10 +19,9 @@ if [ "$1" = "start" ]; then
     mbimcli -d $WDM_DEVICE --set-radio-state=on
     mbim-network $WDM_DEVICE start
     mbim-network $WDM_DEVICE status || true
-    ifdown ${NET_DEVICE} || true
-    ifup ${NET_DEVICE}
+    systemctl restart ifup@${NET_DEVICE}
 elif [ "$1" = "stop" ]; then
-    ifdown ${NET_DEVICE}
+    systemctl stop ifup@${NET_DEVICE}
     mbim-network $WDM_DEVICE stop
     mbimcli -d $WDM_DEVICE --set-radio-state=off
 else
@@ -41,7 +40,7 @@ Type=oneshot
 RemainAfterExit=yes
 ExecStart=/usr/local/sbin/mbim start %i
 ExecStop=/usr/local/sbin/mbim stop %i
-TimeoutStartSec=120s
+TimeoutStartSec=500s
 EOF
 
 cat <<'EOF' > /etc/udev/rules.d/95-mbim.rules
