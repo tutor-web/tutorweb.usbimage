@@ -12,5 +12,7 @@ address=/modem.eias.lan/192.168.8.1
 EOF
 
 cat <<EOF >> /srv/eias.lan/www/status/index.html
+<div class="links">
   <a href="http://modem.eias.lan">Modem web interface</a>
+</div>
 EOF

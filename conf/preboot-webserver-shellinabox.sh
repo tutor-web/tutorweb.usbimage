@@ -44,5 +44,7 @@ cname=shell.eias.lan,eias.lan
 EOF
 
 cat <<EOF >> /srv/eias.lan/www/status/index.html
+<div class="links">
   <a href="http://shell.eias.lan">System shell</a>
+</div>
 EOF

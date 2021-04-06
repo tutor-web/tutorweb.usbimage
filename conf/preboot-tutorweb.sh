@@ -251,5 +251,7 @@ cat <<EOF >> /srv/eias.lan/www/index.html
 EOF
 
 cat <<EOF >> /srv/eias.lan/www/status/index.html
+<div class="links">
   <a href="http://tutor-web.eias.lan/local-dumps/">Get tutor-web dump files</a>
+</div>
 EOF

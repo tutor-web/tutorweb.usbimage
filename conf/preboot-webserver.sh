@@ -101,8 +101,7 @@ cat <<EOF > /srv/eias.lan/www/status/index.html
 <hr/>
 <div class="links">
   <a href="/scripts/system-report">Generate system report</a>
-</body>
-</html>
+</div>
 EOF
 
 mkdir -p /srv/eias.lan/scripts
