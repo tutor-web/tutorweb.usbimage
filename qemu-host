@@ -1,7 +1,11 @@
 #!/bin/bash
 set -eu
 
-wget -c https://cdimage.debian.org/debian-cd/current-live/amd64/iso-hybrid/debian-live-10.8.0-amd64-xfce.iso
+IMAGE="${1-debian-live-10.8.0-amd64-xfce.iso}"
+[ -e "${IMAGE}" ] || {
+    echo wget latest amd64-xfce.iso from https://cdimage.debian.org/debian-cd/current-live/amd64/iso-hybrid/
+    exit 1
+}
 
 CMD_LINE="qemu-system-x86_64 -m 2G -machine accel=kvm"
 
@@ -9,9 +13,7 @@ CMD_LINE="${CMD_LINE} -vga std -monitor stdio"
 
 CMD_LINE="${CMD_LINE} -netdev bridge,br=eiasbr0,id=int_net"
 CMD_LINE="${CMD_LINE} -device virtio-net,netdev=int_net,mac=$(printf 'DE:AD:BE:EF:%02X:%02X\n' $((RANDOM%256)) $((RANDOM%256)))"
-
-IMAGE="${1-debian-live-10.8.0-amd64-xfce.iso}"
-[ -e ${IMAGE} ] && CMD_LINE="${CMD_LINE} -drive format=raw,if=virtio,file=$IMAGE"
+CMD_LINE="${CMD_LINE} -drive format=raw,if=virtio,file=$IMAGE"
 
 echo ${CMD_LINE}
 eval ${CMD_LINE}
