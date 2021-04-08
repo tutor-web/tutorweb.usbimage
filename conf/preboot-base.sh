@@ -173,6 +173,9 @@ chmod a+x /usr/local/sbin/twleds
 cat <<'EOF' > /etc/systemd/system/twleds.service
 [Unit]
 Description=Configure APU2 LEDs
+# NB: i.e. so phy0rx is available as a trigger
+After=nss-lookup.target
+Wants=nss-lookup.target
 
 [Service]
 Type=oneshot
