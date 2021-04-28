@@ -97,6 +97,9 @@ git clone git://github.com/tutor-web/tutorweb.buildout /srv/tutorweb.buildout
 cat <<'EOF' > /srv/tutorweb.buildout/buildout.cfg
 [buildout]
 extends = cfgs/production.cfg
+eggs-directory = /twpreload/buildout_cache/eggs
+download-cache = /twpreload/buildout_cache/downloads
+extends-cache = /twpreload/buildout_cache/extends
 always-checkout = false
 parts +=
     replicate-dump
