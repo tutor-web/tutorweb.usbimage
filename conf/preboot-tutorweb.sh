@@ -33,6 +33,7 @@ EOF
 # NB: Var interpolation on, for password
 cat <<EOSH >> /usr/local/sbin/tutorwebdb
 #!/bin/sh
+set -eu
 
 mountpoint -q /srv/tutorweb.buildout/var \
     || mount --bind /var/local/tutorweb /srv/tutorweb.buildout/var
@@ -69,6 +70,7 @@ cat <<'EOF' > /etc/systemd/system/tutorwebdb.service
 Description=Tutor-web: Create DB if missing
 Requires=mysql.service
 Before=tutorweb-zeo.service
+After=mysql.service
 
 [Service]
 Type=oneshot
