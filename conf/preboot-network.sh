@@ -90,7 +90,9 @@ EOF
 
 cat /twpreload/twhosts | while read -r HOST; do
     echo "# ${HOST}" >> /etc/network/iptables.up.rules
-    echo "-A FORWARD -i br0 -d $(getent ahostsv4 ${HOST} | cut -d' ' -f1 | head -1) -j ACCEPT" >> /etc/network/iptables.up.rules
+    for x in $(getent ahostsv4 ${HOST} | cut -d' ' -f1 | sort | uniq); do
+        echo "-A FORWARD -i br0 -d $x -j ACCEPT" >> /etc/network/iptables.up.rules
+    done
 done
 
 cat <<'EOF' >> /etc/network/iptables.up.rules
