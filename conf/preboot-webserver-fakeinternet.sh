@@ -35,6 +35,11 @@ server {
     return 200 '<HTML><HEAD><TITLE>Success</TITLE></HEAD><BODY>Success</BODY></HTML>';
   }
 
+  location /canonical.html {
+    add_header Content-Type text/html;
+    return 200 '<HTML><HEAD><TITLE>Success</TITLE></HEAD><BODY>Success</BODY></HTML>';
+  }
+
   location /generate_204 {
     return 204;
   }
