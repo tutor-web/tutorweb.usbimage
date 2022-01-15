@@ -14,6 +14,10 @@ From left to right:
 * Serial USB adapter: This adapter allows you to connect another computer to the server for debugging
 * 12v Power supply: Connects to the rear of the unit nearest the USB ports
 
+<img src="images/apu2-heatsinks.jpg" width="100%">
+
+* 2x heatsinks: These attach to the WiFi and LTE modem to keep them cool
+
 ## Inserting a SIM card
 
 1. Unscrew the 4 screws in each corner:
@@ -24,15 +28,19 @@ From left to right:
 
   <img src="images/apu2-internal-overview.jpg" width="100%">
 
-3. Push SIM card metal-side up into slot at the front of the unit:
+3. Peel backing off heatsinks and stick to areas marked with red squares.
+
+  <img src="images/apu2-heatsink-locations.jpg" width="100%">
+
+4. Push SIM card metal-side up into slot at the front of the unit:
 
   <img src="images/apu2-inserting-sim.jpg" width="100%">
 
-4. Press in until the SIM card clicks into place:
+5. Press in until the SIM card clicks into place:
 
   <img src="images/apu2-inserted-sim.jpg" width="100%">
 
-5. Put lid back, reattach screws.
+7. Put lid back, reattach screws.
 
 ## Attaching antennae and PSU
 
