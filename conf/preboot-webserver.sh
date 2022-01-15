@@ -146,3 +146,4 @@ for p in phonehome smly tutor-web mysql kiwix kolibri nginx; do
 done
 echo "*******************************************************************************\n"
 EOSH
+chmod a+x /srv/eias.lan/scripts/system-report
