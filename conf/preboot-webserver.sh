@@ -6,12 +6,16 @@ apt-get install -y nginx fcgiwrap
 
 usermod -aG systemd-journal www-data
 
-awk '
-/(access|error)_log/ { print "\t" $1 " syslog:server=unix:/dev/log;";next }
-/server_names_hash_bucket_size 64;/ { print "\tserver_names_hash_bucket_size 128;"; next }
-{print}' \
-   /etc/nginx/nginx.conf > /etc/nginx/nginx.conf.n
-mv /etc/nginx/nginx.conf.n /etc/nginx/nginx.conf
+cat <<'EOF' > /etc/nginx/conf.d/log-journald.conf
+access_log off;
+error_log off;
+access_log syslog:server=unix:/dev/log;
+error_log syslog:server=unix:/dev/log;
+EOF
+
+cat <<'EOF' > /etc/nginx/conf.d/hash-bucket-size.conf
+server_names_hash_bucket_size 128;
+EOF
 
 cat <<'EOF' > /etc/nginx/sites-available/default
 server {
