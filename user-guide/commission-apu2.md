@@ -60,3 +60,19 @@ A series of 5 high-pitched beeps will indicate it is ready for use.
 ## Powering off the server
 
 Press the red button on the side of the unit, wait for the lights on the side to go out. The power can now be removed.
+
+## Changing APN for SIM card
+
+To access the internet, the server needs an [APN](https://en.wikipedia.org/wiki/Access_Point_Name) that matches the SIM card.
+The details to use vary depending on network operator.
+Either search for APN on the provider's site, or see one of the following sites for information:
+
+*  https://apn.how
+* https://gitlab.gnome.org/GNOME/mobile-broadband-provider-info/-/blob/main/serviceproviders.xml
+
+Go to http://eias.lan/scripts/configure-mbim to enter the details:
+
+* ``APN_AUTH``: Blank if no user/password need to be provided, otherwise try "PAP".
+* ``PROXY``: Leave blank.
+
+More information on the settings [can be found here](https://man.archlinux.org/man/mbim-network.1.en).
